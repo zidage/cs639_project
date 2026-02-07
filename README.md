@@ -22,7 +22,7 @@ Synchronous meetings may be used occasionally if needed, but they are not the de
 
 ## Project Topic Selection
 
-Official project topics will open for voting after 2/9.
+Provided project topics will open for voting after 2/9.
 Before that, feel free to propose ideas or start discussions in GitHub Discussions.
 
 Voting and preference collection will be handled in a lightweight way, and the goal is to converge rather than force consensus.
