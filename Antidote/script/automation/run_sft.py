@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run SFT with dual-GPU friendly settings, logs, and JSON summary.
+"""Run SFT with single-GPU friendly settings, logs, and JSON summary.
 
 Pipeline:
 1) Train SFT LoRA checkpoint from BeaverTails_safe.
@@ -36,6 +36,10 @@ KEY_LOG_TOKENS = (
     "train_runtime",
     "Saving model checkpoint",
 )
+TRAIN_PROGRESS_PATTERN = re.compile(
+    r"(?:\bepoch\b|(?:^|[\\s'\"{])loss(?:[\\s'\":,}]|$)|learning_rate|eval_)",
+    re.IGNORECASE,
+)
 
 SCORE_PATTERN = re.compile(r"(-?\\d+(?:\\.\\d+)?)")
 EXPLICIT_SCORE_PATTERN = re.compile(
@@ -62,6 +66,8 @@ def should_echo_line(line: str, mode: str) -> bool:
         if token in line:
             return True
     stripped = line.strip()
+    if TRAIN_PROGRESS_PATTERN.search(stripped):
+        return True
     if stripped and stripped.endswith("it/s"):
         return True
     return False
@@ -168,7 +174,7 @@ def parse_score_percent(path: Path) -> Optional[float]:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="SFT runner with dual-GPU support")
+    parser = argparse.ArgumentParser(description="SFT runner with single-GPU support")
 
     parser.add_argument(
         "--project-root",
@@ -179,13 +185,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--python-bin", type=str, default=sys.executable)
     parser.add_argument("--model-path", type=str, default="meta-llama/Llama-2-7b-hf")
 
-    parser.add_argument("--train-gpu-ids", type=str, default="0,1")
-    parser.add_argument(
-        "--eval-gpu-id",
-        type=str,
-        default="",
-        help="Default: first id from --train-gpu-ids",
-    )
+    parser.add_argument("--gpu-id", type=str, default="0", help="CUDA_VISIBLE_DEVICES value")
     parser.add_argument("--max-memory-per-gpu", type=str, default="38GiB")
     parser.add_argument("--cpu-offload-gib", type=int, default=0)
     parser.add_argument("--use-gradient-checkpointing", action="store_true", default=False)
@@ -227,8 +227,6 @@ def main() -> int:
         return 2
 
     model_short = Path(args.model_path).name
-    eval_gpu_id = args.eval_gpu_id or args.train_gpu_ids.split(",")[0].strip()
-
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_root = root / "experiments" / args.experiment_name / timestamp
     log_dir = run_root / "logs"
@@ -240,8 +238,8 @@ def main() -> int:
     poison_eval_json = Path(str(poison_output) + "_sentiment_eval.json")
     gsm8k_output = root / "data" / "gsm8k" / f"{model_short}_sft"
 
-    train_env = {"CUDA_VISIBLE_DEVICES": args.train_gpu_ids}
-    eval_env = {"CUDA_VISIBLE_DEVICES": eval_gpu_id}
+    train_env = {"CUDA_VISIBLE_DEVICES": args.gpu_id}
+    eval_env = {"CUDA_VISIBLE_DEVICES": args.gpu_id}
 
     print("=" * 88)
     print("SFT runner")
@@ -249,11 +247,16 @@ def main() -> int:
     print(f"Experiment folder       : {run_root}")
     print(f"Model path              : {args.model_path}")
     print(f"SFT output dir          : {sft_output_dir}")
-    print(f"Training GPUs           : {args.train_gpu_ids}")
-    print(f"Evaluation GPU          : {eval_gpu_id}")
+    print(f"GPU ID                  : {args.gpu_id}")
     print(f"Max memory per GPU      : {args.max_memory_per_gpu}")
     print(f"CPU offload GiB         : {args.cpu_offload_gib}")
     print(f"Gradient checkpointing  : {args.use_gradient_checkpointing}")
+    print(
+        "Training config         : "
+        f"epochs={args.num_train_epochs}, lr={args.learning_rate}, "
+        f"train_bs={args.train_batch_size}, eval_bs={args.eval_batch_size}, "
+        f"grad_acc={args.grad_acc_steps}, sample_num={args.sample_num}"
+    )
     print("=" * 88)
 
     train_cmd: List[str] = [
@@ -379,11 +382,13 @@ def main() -> int:
 
     for step_name, command, cwd, step_log, step_env in step_plan:
         print(f"-> Step start: {step_name}")
+        print(f"   Log file : {step_log}")
+        if step_env:
+            print("   Env      : " + ", ".join([f"{k}={v}" for k, v in step_env.items()]))
+        print("   Command  : " + " ".join(command))
 
         if args.dry_run:
-            if step_env:
-                print("   [dry-run env] " + ", ".join([f"{k}={v}" for k, v in step_env.items()]))
-            print("   [dry-run] " + " ".join(command))
+            print("   [dry-run] command preview only")
             steps.append(
                 StepResult(
                     name=step_name,
@@ -433,8 +438,7 @@ def main() -> int:
             "python_bin": args.python_bin,
         },
         "defaults": {
-            "train_gpu_ids": args.train_gpu_ids,
-            "eval_gpu_id": eval_gpu_id,
+            "gpu_id": args.gpu_id,
             "max_memory_per_gpu": args.max_memory_per_gpu,
             "cpu_offload_gib": args.cpu_offload_gib,
             "use_gradient_checkpointing": args.use_gradient_checkpointing,

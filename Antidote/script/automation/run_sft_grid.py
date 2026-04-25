@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Run SFT attack hyperparameter sweeps with robust logging and JSON summaries.
 
-This orchestrator follows the same workflow style as run_lisa_grid.py:
-1) Optional data build for benign datasets.
-2) SFT-style harmful fine-tuning attack for each (lr, epoch, harmful_ratio) run.
-3) Safety evaluation on BeaverTails harmful prompts.
+Pipeline per run:
+1) Fine-tune from the aligned phase1 LoRA checkpoint.
+2) Safety evaluation on BeaverTails harmful prompts.
+3) Safety evaluation on AdvBench prompts.
 4) Utility evaluation on selected downstream tasks.
-5) Human-readable JSON summary updated after each run.
+5) Optional cleanup: delete the run LoRA checkpoint to save disk.
 """
 
 from __future__ import annotations
@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -23,7 +24,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
+os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+
 TASKS = ("sst2", "gsm8k", "agnews")
+SAFETY_EVALS = ("beavertails", "advbench")
+
 TASK_TO_BENIGN_DATA = {
     "sst2": "data/sst2.json",
     "gsm8k": "data/gsm8k.json",
@@ -42,6 +47,10 @@ KEY_LOG_TOKENS = (
     "train_runtime",
     "train_samples_per_second",
     "Saving model checkpoint",
+)
+TRAIN_PROGRESS_PATTERN = re.compile(
+    r"(?:\bepoch\b|(?:^|[\\s'\"{])loss(?:[\\s'\":,}]|$)|learning_rate|eval_)",
+    re.IGNORECASE,
 )
 
 SCORE_PATTERN = re.compile(r"(-?\d+(?:\.\d+)?)")
@@ -64,10 +73,13 @@ class StepResult:
 class RunResult:
     run_id: str
     index: int
-    hyperparameters: Dict[str, float]
-    output_paths: Dict[str, str]
     status: str
     duration_sec: float
+    variable_hyperparameters: Dict[str, float]
+    resolved_parameters: Dict[str, object]
+    datasets: Dict[str, object]
+    output_paths: Dict[str, object]
+    cleanup: Dict[str, object]
     steps: List[StepResult]
     metrics: Dict[str, object]
     errors: List[str]
@@ -128,6 +140,20 @@ def parse_csv_tasks(raw: str) -> List[str]:
     return tasks
 
 
+def parse_csv_safety_evals(raw: str) -> List[str]:
+    evals: List[str] = []
+    for token in raw.split(","):
+        cleaned = token.strip().lower()
+        if not cleaned:
+            continue
+        if cleaned not in SAFETY_EVALS:
+            raise ValueError(f"Unsupported safety eval dataset: {cleaned}. Choose from: {SAFETY_EVALS}")
+        evals.append(cleaned)
+    if not evals:
+        raise ValueError(f"Failed to parse safety eval list from: {raw}")
+    return evals
+
+
 def ratio_to_pct_string(ratio: float) -> str:
     return f"{ratio * 100:.2f}%"
 
@@ -145,6 +171,8 @@ def should_echo_line(line: str, mode: str) -> bool:
         if token in line:
             return True
     stripped = line.strip()
+    if TRAIN_PROGRESS_PATTERN.search(stripped):
+        return True
     if stripped and stripped.endswith("it/s"):
         return True
     return False
@@ -200,8 +228,7 @@ def run_streamed_command(
         fh.write(f"# End: {datetime.now().isoformat(timespec='seconds')}\n")
         fh.write(f"# Return code: {return_code}\n")
 
-    duration = time.time() - start
-    return return_code, duration
+    return return_code, time.time() - start
 
 
 def load_json_if_exists(path: Path) -> Optional[object]:
@@ -325,10 +352,182 @@ def ensure_data_files(
     return summary
 
 
+def pick_advbench_prompt_field(sample: Dict[str, object], preferred_field: str) -> str:
+    if preferred_field and preferred_field in sample:
+        value = sample.get(preferred_field)
+        if isinstance(value, str) and value.strip():
+            return preferred_field
+
+    candidates = ("instruction", "prompt", "goal", "question", "query", "input")
+    for field in candidates:
+        value = sample.get(field)
+        if isinstance(value, str) and value.strip():
+            return field
+    raise ValueError(
+        "Could not infer prompt field for AdvBench sample. "
+        "Please set --advbench-prompt-field explicitly."
+    )
+
+
+def ensure_advbench_instruction_file(
+    root: Path,
+    target_rel_path: str,
+    num_test_data: int,
+    hf_dataset: str,
+    hf_split: str,
+    prompt_field: str,
+    dry_run: bool,
+) -> Dict[str, object]:
+    target_path = (root / target_rel_path).resolve()
+    if target_path.exists():
+        try:
+            with target_path.open("r", encoding="utf-8") as fh:
+                rows = json.load(fh)
+            count = len(rows) if isinstance(rows, list) else None
+        except Exception:
+            count = None
+        return {
+            "status": "ready",
+            "source": "existing_file",
+            "path": str(target_path),
+            "num_prompts": count,
+        }
+
+    if dry_run:
+        return {
+            "status": "missing_dry_run",
+            "source": "not_created_in_dry_run",
+            "path": str(target_path),
+            "num_prompts": None,
+        }
+
+    try:
+        from datasets import load_dataset  # type: ignore
+    except Exception as exc:
+        raise RuntimeError(
+            "AdvBench instruction file is missing and `datasets` is not available. "
+            "Install `datasets`, or provide --advbench-instruction-path with a JSON file."
+        ) from exc
+
+    print(f"[setup] Building AdvBench instruction file from {hf_dataset}:{hf_split}", flush=True)
+    dataset = load_dataset(hf_dataset, split=hf_split)
+    if len(dataset) == 0:
+        raise RuntimeError(f"AdvBench dataset has no rows: {hf_dataset}:{hf_split}")
+
+    sample = dataset[0]
+    if not isinstance(sample, dict):
+        raise RuntimeError("Unexpected AdvBench row type: expected dict")
+
+    use_field = pick_advbench_prompt_field(sample, prompt_field)
+    limit = len(dataset) if num_test_data <= 0 else min(num_test_data, len(dataset))
+
+    rows: List[Dict[str, str]] = []
+    for idx in range(limit):
+        row = dataset[idx]
+        text = str(row.get(use_field, "")).strip() if isinstance(row, dict) else ""
+        if not text:
+            continue
+        rows.append({"instruction": text})
+
+    if not rows:
+        raise RuntimeError(
+            f"Failed to extract prompt text from AdvBench using field `{use_field}`."
+        )
+
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    with target_path.open("w", encoding="utf-8") as fh:
+        json.dump(rows, fh, indent=2, ensure_ascii=False)
+
+    return {
+        "status": "ready",
+        "source": "generated_from_hf",
+        "path": str(target_path),
+        "hf_dataset": hf_dataset,
+        "hf_split": hf_split,
+        "prompt_field": use_field,
+        "num_prompts": len(rows),
+    }
+
+
+def merge_env(base: Optional[Dict[str, str]], updates: Optional[Dict[str, str]]) -> Optional[Dict[str, str]]:
+    merged: Dict[str, str] = {}
+    if base:
+        merged.update(base)
+    if updates:
+        merged.update(updates)
+    return merged if merged else None
+
+
+def compute_dir_size_bytes(path: Path) -> int:
+    if not path.exists():
+        return 0
+    total = 0
+    for file in path.rglob("*"):
+        if file.is_file():
+            try:
+                total += file.stat().st_size
+            except FileNotFoundError:
+                continue
+    return total
+
+
+def cleanup_checkpoint_dir(
+    checkpoint_dir: Path,
+    allowed_parent: Path,
+    dry_run: bool,
+    should_delete: bool,
+) -> Dict[str, object]:
+    checkpoint_dir = checkpoint_dir.resolve()
+    allowed_parent = allowed_parent.resolve()
+    exists = checkpoint_dir.exists()
+    bytes_before = compute_dir_size_bytes(checkpoint_dir) if exists else 0
+
+    result: Dict[str, object] = {
+        "delete_run_checkpoint": should_delete,
+        "checkpoint_dir": str(checkpoint_dir),
+        "checkpoint_exists_before_cleanup": exists,
+        "checkpoint_size_bytes_before_delete": bytes_before,
+        "checkpoint_size_gb_before_delete": round(bytes_before / (1024 ** 3), 6),
+        "checkpoint_deleted": False,
+        "checkpoint_cleanup_status": "skipped_not_requested" if not should_delete else "pending",
+        "checkpoint_cleanup_error": None,
+    }
+
+    if not should_delete:
+        return result
+
+    if not exists:
+        result["checkpoint_cleanup_status"] = "skipped_missing"
+        return result
+
+    try:
+        checkpoint_dir.relative_to(allowed_parent)
+    except ValueError:
+        result["checkpoint_cleanup_status"] = "skipped_outside_allowed_parent"
+        result["checkpoint_cleanup_error"] = (
+            f"Refused to delete path outside allowed parent: {checkpoint_dir} (allowed: {allowed_parent})"
+        )
+        return result
+
+    if dry_run:
+        result["checkpoint_cleanup_status"] = "dry_run_not_deleted"
+        return result
+
+    try:
+        shutil.rmtree(checkpoint_dir)
+        result["checkpoint_deleted"] = True
+        result["checkpoint_cleanup_status"] = "deleted"
+    except Exception as exc:
+        result["checkpoint_cleanup_status"] = "delete_failed"
+        result["checkpoint_cleanup_error"] = str(exc)
+    return result
+
+
 def build_train_command(
     python_bin: str,
     model_path: str,
     base_lora: str,
+    attack_dataset: str,
     benign_dataset: str,
     output_dir: str,
     lr: float,
@@ -357,7 +556,7 @@ def build_train_command(
         "--lora_folder",
         base_lora,
         "--data_path",
-        "PKU-Alignment/BeaverTails_dangerous",
+        attack_dataset,
         "--bf16",
         "True",
         "--output_dir",
@@ -423,8 +622,9 @@ def build_safety_pred_command(
     lora_after: str,
     output_path: str,
     num_test_data: int,
+    instruction_path: Optional[str] = None,
 ) -> List[str]:
-    return [
+    command = [
         python_bin,
         "pred.py",
         "--lora_folder",
@@ -438,6 +638,9 @@ def build_safety_pred_command(
         "--num_test_data",
         str(num_test_data),
     ]
+    if instruction_path:
+        command.extend(["--instruction_path", instruction_path])
+    return command
 
 
 def build_safety_eval_command(python_bin: str, input_path: str) -> List[str]:
@@ -495,24 +698,26 @@ def summarize_runs(runs: Sequence[RunResult]) -> Dict[str, object]:
     success_runs = [r for r in runs if r.status == "success"]
     failed_runs = [r for r in runs if r.status != "success"]
 
-    best_safety = None
-    if success_runs:
-        comparable = [
-            r for r in success_runs if r.metrics.get("harmful_score_percent") is not None
-        ]
-        if comparable:
-            best = min(comparable, key=lambda x: x.metrics["harmful_score_percent"])
-            best_safety = {
-                "run_id": best.run_id,
-                "harmful_score_percent": best.metrics.get("harmful_score_percent"),
-                "hyperparameters": best.hyperparameters,
-            }
+    best_beavertails = None
+    comparable_beavertails = []
+    for run in success_runs:
+        score = run.metrics.get("harmful_scores_percent_by_dataset", {}).get("beavertails")
+        if score is None:
+            continue
+        comparable_beavertails.append((run, float(score)))
+    if comparable_beavertails:
+        best_run, score = min(comparable_beavertails, key=lambda item: item[1])
+        best_beavertails = {
+            "run_id": best_run.run_id,
+            "harmful_score_percent_beavertails": score,
+            "variable_hyperparameters": best_run.variable_hyperparameters,
+        }
 
     return {
         "total_runs": total,
         "successful_runs": len(success_runs),
         "failed_runs": len(failed_runs),
-        "best_safety_run": best_safety,
+        "best_beavertails_run": best_beavertails,
     }
 
 
@@ -535,10 +740,47 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument("--benign-task", type=str, default="sst2", choices=TASKS)
     parser.add_argument(
+        "--attack-dataset",
+        type=str,
+        default="PKU-Alignment/BeaverTails_dangerous",
+        help="Training dataset used for harmful fine-tuning stage",
+    )
+    parser.add_argument(
         "--utility-evals",
         type=str,
         default="sst2,gsm8k,agnews",
         help="Comma-separated tasks in {sst2,gsm8k,agnews}",
+    )
+    parser.add_argument(
+        "--safety-evals",
+        type=str,
+        default="beavertails,advbench",
+        help="Comma-separated safety datasets in {beavertails,advbench}",
+    )
+
+    parser.add_argument(
+        "--advbench-instruction-path",
+        type=str,
+        default="data/advbench_eval_instructions.json",
+        help="Instruction JSON for AdvBench safety eval (list of {instruction: ...})",
+    )
+    parser.add_argument(
+        "--advbench-hf-dataset",
+        type=str,
+        default="walledai/AdvBench",
+        help="HF dataset id used when --advbench-instruction-path is missing",
+    )
+    parser.add_argument(
+        "--advbench-hf-split",
+        type=str,
+        default="train",
+        help="HF split used when --advbench-instruction-path is missing",
+    )
+    parser.add_argument(
+        "--advbench-prompt-field",
+        type=str,
+        default="",
+        help="Optional field name for AdvBench prompt text, auto-detected when empty",
     )
 
     parser.add_argument("--lrs", type=str, default="1e-5,5e-5,1e-4")
@@ -562,18 +804,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--logging-steps", type=int, default=10)
     parser.add_argument("--cache-dir", type=str, default="cache")
     parser.add_argument("--num-test-data", type=int, default=1000)
-    parser.add_argument(
-        "--train-gpu-ids",
-        type=str,
-        default="",
-        help="Optional CUDA_VISIBLE_DEVICES value for training, e.g. 0,1",
-    )
-    parser.add_argument(
-        "--eval-gpu-id",
-        type=str,
-        default="",
-        help="Optional single GPU id for eval steps. Default: first id from --train-gpu-ids",
-    )
+    parser.add_argument("--gpu-id", type=str, default="0", help="CUDA_VISIBLE_DEVICES value")
     parser.add_argument(
         "--max-memory-per-gpu",
         type=str,
@@ -602,6 +833,36 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-build-data-if-missing",
         dest="build_data_if_missing",
+        action="store_false",
+    )
+
+    parser.add_argument(
+        "--delete-run-checkpoint",
+        dest="delete_run_checkpoint",
+        action="store_true",
+        default=True,
+        help="Delete each run LoRA checkpoint after evaluations to save disk",
+    )
+    parser.add_argument(
+        "--keep-run-checkpoint",
+        dest="delete_run_checkpoint",
+        action="store_false",
+        help="Keep each run LoRA checkpoint",
+    )
+
+    parser.add_argument(
+        "--force-no-weights-only-load",
+        dest="force_no_weights_only_load",
+        action="store_true",
+        default=True,
+        help=(
+            "Set TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 for subprocesses to avoid "
+            "legacy checkpoint deserialization issues on newer torch versions"
+        ),
+    )
+    parser.add_argument(
+        "--no-force-no-weights-only-load",
+        dest="force_no_weights_only_load",
         action="store_false",
     )
 
@@ -639,16 +900,13 @@ def main() -> int:
         return 2
 
     utility_tasks = parse_csv_tasks(args.utility_evals)
+    safety_evals = parse_csv_safety_evals(args.safety_evals)
     lrs = parse_csv_numbers(args.lrs, float)
     epochs = parse_csv_numbers(args.epochs, int)
     harmful_ratios = parse_harmful_ratios(args.harmful_ratios)
 
     model_short = Path(args.model_path).name
-    base_lora = (
-        args.base_lora_folder
-        if args.base_lora_folder
-        else f"ckpt/{model_short}_sft"
-    )
+    base_lora = args.base_lora_folder if args.base_lora_folder else f"ckpt/{model_short}_sft"
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_root = root / "experiments" / args.experiment_name / timestamp
@@ -659,39 +917,41 @@ def main() -> int:
 
     required_data_tasks = sorted(set([args.benign_task] + utility_tasks))
 
+    base_env: Dict[str, str] = {}
+    if args.force_no_weights_only_load:
+        base_env["TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD"] = "1"
+
+    train_env = merge_env(base_env, {"CUDA_VISIBLE_DEVICES": args.gpu_id})
+    eval_env = merge_env(base_env, {"CUDA_VISIBLE_DEVICES": args.gpu_id})
+
     print("=" * 88)
     print("SFT attack grid orchestrator")
-    print(f"Project root        : {root}")
-    print(f"Experiment folder   : {run_root}")
-    print(f"Model path          : {args.model_path}")
-    print(f"Base SFT LoRA       : {base_lora}")
-    print(f"Benign task (train) : {args.benign_task}")
-    print(f"Utility eval tasks  : {utility_tasks}")
-    print(f"LR list             : {lrs}")
-    print(f"Epoch list          : {epochs}")
-    print(f"Harmful ratios      : {[ratio_to_pct_string(r) for r in harmful_ratios]}")
-    if args.train_gpu_ids:
-        print(f"Train GPU IDs       : {args.train_gpu_ids}")
-    if args.eval_gpu_id:
-        print(f"Eval GPU ID         : {args.eval_gpu_id}")
+    print(f"Project root                 : {root}")
+    print(f"Experiment folder            : {run_root}")
+    print(f"Model path                   : {args.model_path}")
+    print(f"Base SFT LoRA                : {base_lora}")
+    print(f"Attack dataset               : {args.attack_dataset}")
+    print(f"Benign task (train mixture)  : {args.benign_task}")
+    print(f"Safety eval datasets         : {safety_evals}")
+    print(f"Utility eval tasks           : {utility_tasks}")
+    print(f"LR list                      : {lrs}")
+    print(f"Epoch list                   : {epochs}")
+    print(f"Harmful ratios               : {[ratio_to_pct_string(r) for r in harmful_ratios]}")
+    print(f"GPU ID                       : {args.gpu_id}")
     if args.max_memory_per_gpu:
-        print(f"Max mem per GPU     : {args.max_memory_per_gpu}")
+        print(f"Max mem per GPU              : {args.max_memory_per_gpu}")
     if args.cpu_offload_gib > 0:
-        print(f"CPU offload GiB     : {args.cpu_offload_gib}")
-    print(f"Gradient checkpoint : {args.use_gradient_checkpointing}")
+        print(f"CPU offload GiB              : {args.cpu_offload_gib}")
+    print(f"Gradient checkpoint          : {args.use_gradient_checkpointing}")
+    print(f"Delete run checkpoint        : {args.delete_run_checkpoint}")
+    print(f"Force no weights-only load   : {args.force_no_weights_only_load}")
+    print(
+        "Train defaults              : "
+        f"batch={args.train_batch_size}, eval_batch={args.eval_batch_size}, "
+        f"grad_acc={args.grad_acc_steps}, sample_num={args.sample_num}, "
+        f"eval_steps={args.eval_steps}"
+    )
     print("=" * 88)
-
-    effective_eval_gpu_id = args.eval_gpu_id
-    if not effective_eval_gpu_id and args.train_gpu_ids:
-        effective_eval_gpu_id = args.train_gpu_ids.split(",")[0].strip()
-
-    train_env = None
-    if args.train_gpu_ids:
-        train_env = {"CUDA_VISIBLE_DEVICES": args.train_gpu_ids}
-
-    eval_env = None
-    if effective_eval_gpu_id:
-        eval_env = {"CUDA_VISIBLE_DEVICES": effective_eval_gpu_id}
 
     if args.dry_run:
         data_summary = {
@@ -718,6 +978,30 @@ def main() -> int:
             print("Tip: rerun with --build-data-if-missing")
             return 3
 
+    advbench_instruction_info: Dict[str, object] = {
+        "status": "not_requested",
+        "source": None,
+        "path": None,
+        "num_prompts": None,
+    }
+    advbench_instruction_path: Optional[Path] = None
+    if "advbench" in safety_evals:
+        try:
+            advbench_instruction_info = ensure_advbench_instruction_file(
+                root=root,
+                target_rel_path=args.advbench_instruction_path,
+                num_test_data=args.num_test_data,
+                hf_dataset=args.advbench_hf_dataset,
+                hf_split=args.advbench_hf_split,
+                prompt_field=args.advbench_prompt_field,
+                dry_run=args.dry_run,
+            )
+        except Exception as exc:
+            print(f"[error] Failed to prepare AdvBench instruction file: {exc}")
+            return 4
+        if advbench_instruction_info.get("path"):
+            advbench_instruction_path = Path(str(advbench_instruction_info["path"]))
+
     grid: List[Tuple[float, int, float]] = []
     for lr in lrs:
         for ep in epochs:
@@ -733,10 +1017,19 @@ def main() -> int:
             "project_root": str(root),
             "experiment_root": str(run_root),
             "model_path": args.model_path,
+            "python_bin": args.python_bin,
+            "json_schema_version": "sft_grid_v2",
+        },
+        "attack_config": {
+            "attack_dataset": args.attack_dataset,
             "base_lora_folder": base_lora,
             "benign_task": args.benign_task,
+            "benign_dataset_path": TASK_TO_BENIGN_DATA[args.benign_task],
+        },
+        "evaluation_config": {
+            "safety_eval_datasets": safety_evals,
+            "advbench_instruction": advbench_instruction_info,
             "utility_eval_tasks": utility_tasks,
-            "python_bin": args.python_bin,
         },
         "defaults": {
             "sample_num": args.sample_num,
@@ -751,14 +1044,16 @@ def main() -> int:
             "logging_steps": args.logging_steps,
             "cache_dir": args.cache_dir,
             "num_test_data": args.num_test_data,
-            "train_gpu_ids": args.train_gpu_ids,
-            "eval_gpu_id": effective_eval_gpu_id,
+            "gpu_id": args.gpu_id,
             "max_memory_per_gpu": args.max_memory_per_gpu,
             "cpu_offload_gib": args.cpu_offload_gib,
             "use_gradient_checkpointing": args.use_gradient_checkpointing,
             "build_data_if_missing": args.build_data_if_missing,
+            "delete_run_checkpoint": args.delete_run_checkpoint,
+            "force_no_weights_only_load": args.force_no_weights_only_load,
             "continue_on_error": args.continue_on_error,
             "echo_mode": args.echo_mode,
+            "dry_run": args.dry_run,
         },
         "data_prep": data_summary,
         "runs": [],
@@ -785,8 +1080,13 @@ def main() -> int:
         )
 
         train_output_dir = root / "ckpt" / args.benign_task / train_tag
-        poison_output_path = root / "data" / "poison" / args.benign_task / train_tag
-        safety_eval_json = Path(str(poison_output_path) + "_sentiment_eval.json")
+
+        safety_pred_outputs: Dict[str, Path] = {}
+        safety_eval_jsons: Dict[str, Path] = {}
+        for dataset_name in safety_evals:
+            pred_output = root / "data" / "poison" / args.benign_task / dataset_name / train_tag
+            safety_pred_outputs[dataset_name] = pred_output
+            safety_eval_jsons[dataset_name] = Path(str(pred_output) + "_sentiment_eval.json")
 
         utility_output_paths: Dict[str, Path] = {
             task: root / "data" / task / train_tag for task in utility_tasks
@@ -810,6 +1110,7 @@ def main() -> int:
             python_bin=args.python_bin,
             model_path=args.model_path,
             base_lora=base_lora,
+            attack_dataset=args.attack_dataset,
             benign_dataset=TASK_TO_BENIGN_DATA[args.benign_task],
             output_dir=str(train_output_dir),
             lr=lr,
@@ -832,37 +1133,53 @@ def main() -> int:
         )
         step_plan.append(("train", train_cmd, root, log_dir / "train.log", train_env))
 
-        safety_pred_cmd = build_safety_pred_command(
-            python_bin=args.python_bin,
-            model_path=args.model_path,
-            base_lora=str((root / base_lora).resolve()),
-            lora_after=str(train_output_dir.resolve()),
-            output_path=str(poison_output_path.resolve()),
-            num_test_data=args.num_test_data,
-        )
-        step_plan.append(
-            (
-                "safety_pred",
-                safety_pred_cmd,
-                root / "poison" / "evaluation",
-                log_dir / "safety_pred.log",
-                eval_env,
-            )
-        )
+        for dataset_name in safety_evals:
+            instruction_path: Optional[str]
+            if dataset_name == "beavertails":
+                instruction_path = "BeaverTails"
+            elif dataset_name == "advbench":
+                if advbench_instruction_path is None:
+                    run_failed = True
+                    errors.append("AdvBench eval requested but instruction file is not available")
+                    break
+                instruction_path = str(advbench_instruction_path)
+            else:
+                run_failed = True
+                errors.append(f"Unsupported safety eval dataset in runtime: {dataset_name}")
+                break
 
-        safety_eval_cmd = build_safety_eval_command(
-            python_bin=args.python_bin,
-            input_path=str(poison_output_path.resolve()),
-        )
-        step_plan.append(
-            (
-                "safety_eval",
-                safety_eval_cmd,
-                root / "poison" / "evaluation",
-                log_dir / "safety_eval.log",
-                eval_env,
+            safety_pred_cmd = build_safety_pred_command(
+                python_bin=args.python_bin,
+                model_path=args.model_path,
+                base_lora=str((root / base_lora).resolve()),
+                lora_after=str(train_output_dir.resolve()),
+                output_path=str(safety_pred_outputs[dataset_name].resolve()),
+                num_test_data=args.num_test_data,
+                instruction_path=instruction_path,
             )
-        )
+            step_plan.append(
+                (
+                    f"safety_pred_{dataset_name}",
+                    safety_pred_cmd,
+                    root / "poison" / "evaluation",
+                    log_dir / f"safety_pred_{dataset_name}.log",
+                    eval_env,
+                )
+            )
+
+            safety_eval_cmd = build_safety_eval_command(
+                python_bin=args.python_bin,
+                input_path=str(safety_pred_outputs[dataset_name].resolve()),
+            )
+            step_plan.append(
+                (
+                    f"safety_eval_{dataset_name}",
+                    safety_eval_cmd,
+                    root / "poison" / "evaluation",
+                    log_dir / f"safety_eval_{dataset_name}.log",
+                    eval_env,
+                )
+            )
 
         for task in utility_tasks:
             utility_cmd = build_utility_eval_command(
@@ -884,91 +1201,141 @@ def main() -> int:
                 )
             )
 
-        for step_name, command, cwd, log_file, step_env in step_plan:
-            print(f"  -> Step start: {step_name}")
-
-            if args.dry_run:
+        if not run_failed:
+            for step_name, command, cwd, log_file, step_env in step_plan:
+                print(f"  -> Step start: {step_name}")
+                print(f"     Log file : {log_file}")
                 if step_env:
-                    print("     [dry-run env] " + ", ".join([f"{k}={v}" for k, v in step_env.items()]))
-                print("     [dry-run] " + " ".join(command))
-                step_result = StepResult(
-                    name=step_name,
-                    status="dry-run",
-                    return_code=0,
-                    duration_sec=0.0,
-                    log_file=str(log_file.relative_to(root)),
+                    print("     Env      : " + ", ".join([f"{k}={v}" for k, v in step_env.items()]))
+                print("     Command  : " + " ".join(command))
+
+                if args.dry_run:
+                    print("     [dry-run] command preview only")
+                    steps.append(
+                        StepResult(
+                            name=step_name,
+                            status="dry-run",
+                            return_code=0,
+                            duration_sec=0.0,
+                            log_file=str(log_file.relative_to(root)),
+                        )
+                    )
+                    continue
+
+                rc, elapsed = run_streamed_command(
+                    command=command,
+                    cwd=cwd,
+                    log_file=log_file,
+                    step_name=step_name,
+                    echo_mode=args.echo_mode,
+                    env_overrides=step_env,
                 )
-                steps.append(step_result)
-                continue
+                status = "success" if rc == 0 else "failed"
+                steps.append(
+                    StepResult(
+                        name=step_name,
+                        status=status,
+                        return_code=rc,
+                        duration_sec=round(elapsed, 3),
+                        log_file=str(log_file.relative_to(root)),
+                    )
+                )
 
-            rc, elapsed = run_streamed_command(
-                command=command,
-                cwd=cwd,
-                log_file=log_file,
-                step_name=step_name,
-                echo_mode=args.echo_mode,
-                env_overrides=step_env,
-            )
-            status = "success" if rc == 0 else "failed"
-            step_result = StepResult(
-                name=step_name,
-                status=status,
-                return_code=rc,
-                duration_sec=round(elapsed, 3),
-                log_file=str(log_file.relative_to(root)),
-            )
-            steps.append(step_result)
+                if rc != 0:
+                    run_failed = True
+                    errors.append(f"Step {step_name} failed with return code {rc}")
+                    print(f"  -> Step failed: {step_name} (rc={rc})")
+                    break
 
-            if rc != 0:
-                run_failed = True
-                errors.append(f"Step {step_name} failed with return code {rc}")
-                print(f"  -> Step failed: {step_name} (rc={rc})")
-                break
-
-            print(f"  -> Step done: {step_name} ({elapsed:.1f}s)")
+                print(f"  -> Step done: {step_name} ({elapsed:.1f}s)")
 
         run_duration = round(time.time() - run_start, 3)
 
-        harmful_score = parse_safety_score_percent(safety_eval_json)
+        harmful_scores: Dict[str, Optional[float]] = {}
+        for dataset_name in safety_evals:
+            harmful_scores[dataset_name] = parse_safety_score_percent(safety_eval_jsons[dataset_name])
+
         utility_scores: Dict[str, Optional[float]] = {}
         for task in utility_tasks:
             utility_scores[task] = parse_utility_score_percent(utility_output_paths[task])
 
-        metrics = {
-            "harmful_score_percent": harmful_score,
-            "utility_scores_percent": utility_scores,
+        cleanup = cleanup_checkpoint_dir(
+            checkpoint_dir=train_output_dir,
+            allowed_parent=root / "ckpt",
+            dry_run=args.dry_run,
+            should_delete=args.delete_run_checkpoint,
+        )
+
+        resolved_parameters = {
+            "learning_rate": lr,
+            "epochs": ep,
+            "harmful_ratio": ratio,
+            "harmful_ratio_percent": round(ratio * 100.0, 4),
+            "sample_num": args.sample_num,
+            "attack_dataset": args.attack_dataset,
+            "benign_dataset": TASK_TO_BENIGN_DATA[args.benign_task],
+            "benign_task": args.benign_task,
+            "train_batch_size": args.train_batch_size,
+            "eval_batch_size": args.eval_batch_size,
+            "grad_acc_steps": args.grad_acc_steps,
+            "save_steps": args.save_steps,
+            "eval_steps": args.eval_steps,
+            "weight_decay": args.weight_decay,
+            "warmup_ratio": args.warmup_ratio,
+            "scheduler": args.scheduler,
+            "logging_steps": args.logging_steps,
+            "cache_dir": args.cache_dir,
+            "num_test_data": args.num_test_data,
+            "model_path": args.model_path,
+            "base_lora_folder": base_lora,
+            "gpu_id": args.gpu_id,
+            "max_memory_per_gpu": args.max_memory_per_gpu,
+            "cpu_offload_gib": args.cpu_offload_gib,
+            "use_gradient_checkpointing": args.use_gradient_checkpointing,
+            "force_no_weights_only_load": args.force_no_weights_only_load,
+            "delete_run_checkpoint": args.delete_run_checkpoint,
         }
 
         run_result = RunResult(
             run_id=run_id,
             index=idx,
-            hyperparameters={
+            status="failed" if run_failed else "success",
+            duration_sec=run_duration,
+            variable_hyperparameters={
                 "learning_rate": lr,
                 "epochs": ep,
                 "harmful_ratio": ratio,
                 "harmful_ratio_percent": round(ratio * 100.0, 4),
             },
+            resolved_parameters=resolved_parameters,
+            datasets={
+                "attack_training_dataset": args.attack_dataset,
+                "benign_training_dataset": TASK_TO_BENIGN_DATA[args.benign_task],
+                "safety_evaluation_datasets": {
+                    "beavertails": "BeaverTails built-in prompts" if "beavertails" in safety_evals else None,
+                    "advbench": str(advbench_instruction_path) if "advbench" in safety_evals else None,
+                },
+                "utility_evaluation_tasks": utility_tasks,
+            },
             output_paths={
                 "sft_attack_lora_output_dir": str(train_output_dir),
-                "safety_pred_output": str(poison_output_path),
-                "safety_eval_json": str(safety_eval_json),
+                "safety_pred_outputs": {k: str(v) for k, v in safety_pred_outputs.items()},
+                "safety_eval_jsons": {k: str(v) for k, v in safety_eval_jsons.items()},
                 "utility_outputs": {task: str(path) for task, path in utility_output_paths.items()},
                 "run_log_dir": str(log_dir),
             },
-            status="failed" if run_failed else "success",
-            duration_sec=run_duration,
+            cleanup=cleanup,
             steps=steps,
-            metrics=metrics,
+            metrics={
+                "harmful_scores_percent_by_dataset": harmful_scores,
+                "harmful_score_percent": harmful_scores.get("beavertails"),
+                "utility_scores_percent": utility_scores,
+            },
             errors=errors,
         )
         run_results.append(run_result)
 
-        summary_header["runs"] = [
-            {
-                **asdict(rr),
-            }
-            for rr in run_results
-        ]
+        summary_header["runs"] = [{**asdict(rr)} for rr in run_results]
         summary_header["aggregate"] = summarize_runs(run_results)
         write_summary_json(summary_path, summary_header)
 
@@ -976,8 +1343,9 @@ def main() -> int:
             f"[{idx}/{total_runs}] completed with status={run_result.status}, "
             f"duration={run_duration:.1f}s"
         )
-        print(f"    Harmful score (%): {harmful_score}")
+        print(f"    Harmful scores (%): {harmful_scores}")
         print(f"    Utility scores (%): {utility_scores}")
+        print(f"    Checkpoint cleanup : {cleanup['checkpoint_cleanup_status']}")
         print(f"    Summary JSON updated: {summary_path}")
 
         if run_failed and not args.continue_on_error:
@@ -1002,4 +1370,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

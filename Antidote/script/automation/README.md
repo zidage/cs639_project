@@ -4,7 +4,7 @@ This folder contains automation scripts:
 
 - `setup_venv.py`: create a Python virtual environment and install dependencies.
 - `run_lisa_grid.py`: run LISA sweeps with detailed progress, step logs, and JSON summaries.
-- `run_sft.py`: run SFT with dual-GPU settings, progress logs, and JSON summary.
+- `run_sft.py`: run SFT with single-GPU settings, progress logs, and JSON summary.
 - `run_sft_grid.py`: run SFT attack sweeps (27 default runs) with detailed logs and JSON summaries.
 
 ## 1) Create environment
@@ -31,11 +31,11 @@ The default values already match:
 python script/automation/run_lisa_grid.py
 ```
 
-## 2.5) Run SFT (dual-GPU)
+## 2.5) Run SFT (single-GPU)
 
 ```bash
 python script/automation/run_sft.py \
-  --train-gpu-ids 0,1 \
+  --gpu-id 0 \
   --max-memory-per-gpu 38GiB \
   --use-gradient-checkpointing
 ```
@@ -44,7 +44,7 @@ If memory is still tight:
 
 ```bash
 python script/automation/run_sft.py \
-  --train-gpu-ids 0,1 \
+  --gpu-id 0 \
   --max-memory-per-gpu 38GiB \
   --cpu-offload-gib 64 \
   --train-batch-size 2 \
@@ -66,16 +66,19 @@ Defaults:
 - learning rates: 1e-5, 5e-5, 1e-4
 - epochs: 5, 10, 20
 - harmful ratios: 1%, 5%, 10%
+- safety eval datasets: BeaverTails + AdvBench
+- utility eval tasks: SST-2 + GSM8K + AGNews
+- run checkpoint cleanup: delete each run checkpoint after eval (to save disk)
 
 ```bash
 python script/automation/run_sft_grid.py
 ```
 
-Two-GPU memory-safe example:
+Single-GPU example:
 
 ```bash
 python script/automation/run_sft_grid.py \
-  --train-gpu-ids 0,1 \
+  --gpu-id 0 \
   --max-memory-per-gpu 38GiB \
   --use-gradient-checkpointing
 ```
@@ -84,6 +87,12 @@ Dry-run preview:
 
 ```bash
 python script/automation/run_sft_grid.py --dry-run
+```
+
+Keep per-run checkpoints (disable auto-delete):
+
+```bash
+python script/automation/run_sft_grid.py --keep-run-checkpoint
 ```
 
 ## Useful options
