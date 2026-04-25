@@ -862,6 +862,12 @@ def parse_args() -> argparse.Namespace:
         default="1,5,10",
         help="Comma-separated values in percent (1,5,10) or ratio (0.01,0.05,0.10)",
     )
+    parser.add_argument(
+        "--start-iteration",
+        type=int,
+        default=1,
+        help="1-based grid iteration index to start from",
+    )
 
     parser.add_argument("--sample-num", type=int, default=5000)
     parser.add_argument("--train-batch-size", type=int, default=5)
@@ -1097,6 +1103,19 @@ def main() -> int:
                 grid.append((lr, ep, ratio))
 
     total_runs = len(grid)
+    if args.start_iteration < 1:
+        print(f"[error] --start-iteration must be >= 1, got {args.start_iteration}")
+        return 5
+    if args.start_iteration > total_runs:
+        print(
+            f"[error] --start-iteration={args.start_iteration} exceeds total grid size={total_runs}"
+        )
+        return 5
+
+    execution_grid: List[Tuple[int, Tuple[float, int, float]]] = list(
+        enumerate(grid, start=1)
+    )[args.start_iteration - 1 :]
+    planned_runs_from_start = len(execution_grid)
     run_results: List[RunResult] = []
 
     summary_header: Dict[str, object] = {
@@ -1144,6 +1163,8 @@ def main() -> int:
             "continue_on_error": args.continue_on_error,
             "echo_mode": args.echo_mode,
             "dry_run": args.dry_run,
+            "start_iteration": args.start_iteration,
+            "planned_runs_from_start": planned_runs_from_start,
         },
         "data_prep": data_summary,
         "runs": [],
@@ -1153,7 +1174,12 @@ def main() -> int:
     if args.dry_run:
         print("[dry-run] Commands will not be executed.")
 
-    for idx, (lr, ep, ratio) in enumerate(grid, start=1):
+    print(
+        f"[grid] start_iteration={args.start_iteration}, "
+        f"planned_runs_from_start={planned_runs_from_start}, total_grid_size={total_runs}"
+    )
+
+    for idx, (lr, ep, ratio) in execution_grid:
         ratio_tag = ratio_to_tag_value(ratio)
         run_id = f"run_{idx:03d}_lr{lr}_ep{ep}_ratio{ratio_tag}"
         run_dir = run_root / run_id
@@ -1450,6 +1476,8 @@ def main() -> int:
     print("Sweep finished")
     print(f"Summary JSON: {summary_path}")
     print(f"Total planned runs: {total_runs}")
+    print(f"Start iteration: {args.start_iteration}")
+    print(f"Planned runs from start iteration: {planned_runs_from_start}")
     print(f"Total executed runs: {len(run_results)}")
     print(f"Aggregate: {summary_header['aggregate']}")
     print("=" * 88)

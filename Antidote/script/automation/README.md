@@ -90,6 +90,12 @@ Dry-run preview:
 python script/automation/run_sft_grid.py --dry-run
 ```
 
+Start from the i-th grid iteration (1-based):
+
+```bash
+python script/automation/run_sft_grid.py --start-iteration 10
+```
+
 Keep per-run checkpoints (disable auto-delete):
 
 ```bash
