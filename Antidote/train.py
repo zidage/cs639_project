@@ -148,6 +148,9 @@ def train():
     parser.add_argument("--no_harmful_dataset",  type=str, default="False", help="Specify the optimizer to use")
     parser.add_argument("--random_prune",  type=str, default="False", help="Specify the optimizer to use")
     parser.add_argument("--full_finetuning",  type=str, default="False", help="Specify the optimizer to use")
+    parser.add_argument("--max_memory_per_gpu", type=str, default="", help="Per-GPU memory cap used by device_map auto, e.g. 38GiB")
+    parser.add_argument("--cpu_offload_gib", type=int, default=0, help="CPU memory cap in GiB for optional offload")
+    parser.add_argument("--use_gradient_checkpointing", type=str, default="False", help="Enable gradient checkpointing for lower activation memory")
     # Set the seed for random module
     seed = 43
     random.seed(seed)
@@ -193,6 +196,17 @@ def train():
     training_args.no_harmful_dataset = extra_args.no_harmful_dataset
     training_args.random_prune=extra_args.random_prune
     training_args.full_finetuning = extra_args.full_finetuning
+
+    max_memory = None
+    if extra_args.max_memory_per_gpu != "":
+        max_memory = {}
+        visible_gpu_count = torch.cuda.device_count()
+        for gpu_idx in range(visible_gpu_count):
+            max_memory[gpu_idx] = extra_args.max_memory_per_gpu
+        if extra_args.cpu_offload_gib > 0:
+            max_memory["cpu"] = f"{extra_args.cpu_offload_gib}GiB"
+        print("Use max_memory for model loading:", max_memory)
+
     if data_args.benign_dataset== "data/alpaca.json":
         # to prevent oom
         training_args.model_max_length=512
@@ -209,9 +223,18 @@ def train():
         load_in_8bit=False,
         cache_dir=training_args.cache_dir,
         device_map="auto",
+        max_memory=max_memory,
         token = access_token
 
     )
+
+    if extra_args.use_gradient_checkpointing == "True":
+        print("Enable gradient checkpointing")
+        model.gradient_checkpointing_enable()
+        model.config.use_cache = False
+
+    if hasattr(model, "hf_device_map"):
+        print("Model device map:", model.hf_device_map)
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         model_args.model_name_or_path,

@@ -158,6 +158,7 @@ def run_streamed_command(
     log_file: Path,
     step_name: str,
     echo_mode: str,
+    env_overrides: Optional[Dict[str, str]] = None,
 ) -> Tuple[int, float]:
     log_file.parent.mkdir(parents=True, exist_ok=True)
     start = time.time()
@@ -168,7 +169,16 @@ def run_streamed_command(
         fh.write(f"# CWD: {cwd}\\n")
         fh.write("# Command:\\n")
         fh.write(" ".join(command) + "\\n\\n")
+        if env_overrides:
+            fh.write("# Env overrides:\\n")
+            for key, value in env_overrides.items():
+                fh.write(f"{key}={value}\\n")
+            fh.write("\\n")
         fh.flush()
+
+        process_env = os.environ.copy()
+        if env_overrides:
+            process_env.update(env_overrides)
 
         process = subprocess.Popen(
             list(command),
@@ -177,6 +187,7 @@ def run_streamed_command(
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
+            env=process_env,
         )
 
         assert process.stdout is not None
@@ -341,8 +352,11 @@ def build_train_command(
     scheduler: str,
     logging_steps: int,
     cache_dir: str,
+    max_memory_per_gpu: str,
+    cpu_offload_gib: int,
+    use_gradient_checkpointing: bool,
 ) -> List[str]:
-    return [
+    command = [
         python_bin,
         "train.py",
         "--model_name_or_path",
@@ -406,6 +420,15 @@ def build_train_command(
         "--guide_data_num",
         str(guide_data_num),
     ]
+
+    if max_memory_per_gpu:
+        command.extend(["--max_memory_per_gpu", max_memory_per_gpu])
+    if cpu_offload_gib > 0:
+        command.extend(["--cpu_offload_gib", str(cpu_offload_gib)])
+    if use_gradient_checkpointing:
+        command.extend(["--use_gradient_checkpointing", "True"])
+
+    return command
 
 
 def build_safety_pred_command(
@@ -564,6 +587,36 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--logging-steps", type=int, default=10)
     parser.add_argument("--cache-dir", type=str, default="cache")
     parser.add_argument("--num-test-data", type=int, default=1000)
+    parser.add_argument(
+        "--train-gpu-ids",
+        type=str,
+        default="",
+        help="Optional CUDA_VISIBLE_DEVICES value for training, e.g. 0,1",
+    )
+    parser.add_argument(
+        "--eval-gpu-id",
+        type=str,
+        default="",
+        help="Optional single GPU id for eval steps. Default: first id from --train-gpu-ids",
+    )
+    parser.add_argument(
+        "--max-memory-per-gpu",
+        type=str,
+        default="",
+        help="Optional per-GPU memory cap passed to train.py, e.g. 38GiB",
+    )
+    parser.add_argument(
+        "--cpu-offload-gib",
+        type=int,
+        default=0,
+        help="Optional CPU offload memory cap passed to train.py",
+    )
+    parser.add_argument(
+        "--use-gradient-checkpointing",
+        action="store_true",
+        default=False,
+        help="Enable gradient checkpointing in train.py",
+    )
 
     parser.add_argument(
         "--build-data-if-missing",
@@ -642,7 +695,28 @@ def main() -> int:
     print(f"LR list             : {lrs}")
     print(f"Epoch list          : {epochs}")
     print(f"Harmful ratios      : {[ratio_to_pct_string(r) for r in harmful_ratios]}")
+    if args.train_gpu_ids:
+        print(f"Train GPU IDs       : {args.train_gpu_ids}")
+    if args.eval_gpu_id:
+        print(f"Eval GPU ID         : {args.eval_gpu_id}")
+    if args.max_memory_per_gpu:
+        print(f"Max mem per GPU     : {args.max_memory_per_gpu}")
+    if args.cpu_offload_gib > 0:
+        print(f"CPU offload GiB     : {args.cpu_offload_gib}")
+    print(f"Gradient checkpoint : {args.use_gradient_checkpointing}")
     print("=" * 88)
+
+    effective_eval_gpu_id = args.eval_gpu_id
+    if not effective_eval_gpu_id and args.train_gpu_ids:
+        effective_eval_gpu_id = args.train_gpu_ids.split(",")[0].strip()
+
+    train_env = None
+    if args.train_gpu_ids:
+        train_env = {"CUDA_VISIBLE_DEVICES": args.train_gpu_ids}
+
+    eval_env = None
+    if effective_eval_gpu_id:
+        eval_env = {"CUDA_VISIBLE_DEVICES": effective_eval_gpu_id}
 
     if args.dry_run:
         data_summary = {
@@ -706,6 +780,11 @@ def main() -> int:
             "logging_steps": args.logging_steps,
             "cache_dir": args.cache_dir,
             "num_test_data": args.num_test_data,
+            "train_gpu_ids": args.train_gpu_ids,
+            "eval_gpu_id": effective_eval_gpu_id,
+            "max_memory_per_gpu": args.max_memory_per_gpu,
+            "cpu_offload_gib": args.cpu_offload_gib,
+            "use_gradient_checkpointing": args.use_gradient_checkpointing,
             "build_data_if_missing": args.build_data_if_missing,
             "continue_on_error": args.continue_on_error,
             "echo_mode": args.echo_mode,
@@ -758,7 +837,7 @@ def main() -> int:
         errors: List[str] = []
         run_failed = False
 
-        step_plan: List[Tuple[str, Sequence[str], Path, Path]] = []
+        step_plan: List[Tuple[str, Sequence[str], Path, Path, Optional[Dict[str, str]]]] = []
 
         train_cmd = build_train_command(
             python_bin=args.python_bin,
@@ -784,8 +863,11 @@ def main() -> int:
             scheduler=args.scheduler,
             logging_steps=args.logging_steps,
             cache_dir=args.cache_dir,
+            max_memory_per_gpu=args.max_memory_per_gpu,
+            cpu_offload_gib=args.cpu_offload_gib,
+            use_gradient_checkpointing=args.use_gradient_checkpointing,
         )
-        step_plan.append(("train", train_cmd, root, log_dir / "train.log"))
+        step_plan.append(("train", train_cmd, root, log_dir / "train.log", train_env))
 
         safety_pred_cmd = build_safety_pred_command(
             python_bin=args.python_bin,
@@ -801,6 +883,7 @@ def main() -> int:
                 safety_pred_cmd,
                 root / "poison" / "evaluation",
                 log_dir / "safety_pred.log",
+                eval_env,
             )
         )
 
@@ -814,6 +897,7 @@ def main() -> int:
                 safety_eval_cmd,
                 root / "poison" / "evaluation",
                 log_dir / "safety_eval.log",
+                eval_env,
             )
         )
 
@@ -833,13 +917,16 @@ def main() -> int:
                     utility_cmd,
                     root / task,
                     log_dir / f"utility_{task}.log",
+                    eval_env,
                 )
             )
 
-        for step_name, command, cwd, log_file in step_plan:
+        for step_name, command, cwd, log_file, step_env in step_plan:
             print(f"  -> Step start: {step_name}")
 
             if args.dry_run:
+                if step_env:
+                    print("     [dry-run env] " + ", ".join([f"{k}={v}" for k, v in step_env.items()]))
                 print("     [dry-run] " + " ".join(command))
                 step_result = StepResult(
                     name=step_name,
@@ -857,6 +944,7 @@ def main() -> int:
                 log_file=log_file,
                 step_name=step_name,
                 echo_mode=args.echo_mode,
+                env_overrides=step_env,
             )
             status = "success" if rc == 0 else "failed"
             step_result = StepResult(

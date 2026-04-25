@@ -4,6 +4,7 @@ This folder contains two scripts:
 
 - `setup_venv.py`: create a Python virtual environment and install dependencies.
 - `run_lisa_grid.py`: run LISA sweeps with detailed progress, step logs, and JSON summaries.
+- `run_sft.py`: run SFT with dual-GPU settings, progress logs, and JSON summary.
 
 ## 1) Create environment
 
@@ -20,6 +21,7 @@ python script/automation/setup_venv.py --extra-packages "tensorboard,wandb"
 ## 2) Run all requested LISA sweeps
 
 The default values already match:
+
 - learning rates: 1e-5, 5e-5, 1e-4
 - epochs: 5, 10, 20
 - harmful ratios: 1%, 5%, 10%
@@ -27,6 +29,34 @@ The default values already match:
 ```bash
 python script/automation/run_lisa_grid.py
 ```
+
+## 2.5) Run SFT (dual-GPU)
+
+```bash
+python script/automation/run_sft.py \
+  --train-gpu-ids 0,1 \
+  --max-memory-per-gpu 38GiB \
+  --use-gradient-checkpointing
+```
+
+If memory is still tight:
+
+```bash
+python script/automation/run_sft.py \
+  --train-gpu-ids 0,1 \
+  --max-memory-per-gpu 38GiB \
+  --cpu-offload-gib 64 \
+  --train-batch-size 2 \
+  --eval-batch-size 2 \
+  --grad-acc-steps 3 \
+  --use-gradient-checkpointing
+```
+
+SFT outputs:
+
+- checkpoint: `ckpt/<model>_sft`
+- summary: `experiments/sft_runs/<timestamp>/summary.json`
+- logs: `experiments/sft_runs/<timestamp>/logs/*.log`
 
 ## Useful options
 
@@ -47,6 +77,25 @@ python script/automation/run_lisa_grid.py --no-build-data-if-missing
 python script/automation/run_lisa_grid.py --dry-run
 ```
 
+## Two-GPU memory-safe run (2 x 40GB)
+
+```bash
+python script/automation/run_lisa_grid.py \
+  --train-gpu-ids 0,1 \
+  --max-memory-per-gpu 38GiB \
+  --use-gradient-checkpointing
+```
+
+If GPU memory pressure is still high, add CPU offload:
+
+```bash
+python script/automation/run_lisa_grid.py \
+  --train-gpu-ids 0,1 \
+  --max-memory-per-gpu 38GiB \
+  --cpu-offload-gib 64 \
+  --use-gradient-checkpointing
+```
+
 ## Output layout
 
 Each sweep creates a timestamped folder under:
@@ -55,6 +104,7 @@ Each sweep creates a timestamped folder under:
 - `experiments/lisa_grid/<timestamp>/<run_id>/logs/*.log`
 
 The JSON summary includes:
+
 - run status (success/failed)
 - exact hyperparameters
 - output paths for model checkpoints and eval files
