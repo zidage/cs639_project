@@ -352,6 +352,35 @@ def ensure_data_files(
     return summary
 
 
+def read_hf_token_from_file(root: Path, token_file_rel_path: str) -> Tuple[Optional[str], Dict[str, object]]:
+    token_path = (root / token_file_rel_path).resolve()
+    info: Dict[str, object] = {
+        "token_file": str(token_path),
+        "token_source": "file",
+        "token_loaded": False,
+        "status": "missing",
+    }
+
+    if not token_path.exists():
+        return None, info
+
+    try:
+        with token_path.open("r", encoding="utf-8") as fh:
+            for line in fh:
+                token = line.strip()
+                if token:
+                    info["token_loaded"] = True
+                    info["status"] = "loaded"
+                    return token, info
+    except Exception as exc:
+        info["status"] = "read_error"
+        info["error"] = str(exc)
+        return None, info
+
+    info["status"] = "empty"
+    return None, info
+
+
 def pick_advbench_prompt_field(sample: Dict[str, object], preferred_field: str) -> str:
     if preferred_field and preferred_field in sample:
         value = sample.get(preferred_field)
@@ -376,6 +405,7 @@ def ensure_advbench_instruction_file(
     hf_dataset: str,
     hf_split: str,
     prompt_field: str,
+    hf_token: Optional[str],
     dry_run: bool,
 ) -> Dict[str, object]:
     target_path = (root / target_rel_path).resolve()
@@ -410,7 +440,35 @@ def ensure_advbench_instruction_file(
         ) from exc
 
     print(f"[setup] Building AdvBench instruction file from {hf_dataset}:{hf_split}", flush=True)
-    dataset = load_dataset(hf_dataset, split=hf_split)
+
+    dataset = None
+    auth_mode = "anonymous"
+    auth_errors: List[str] = []
+    if hf_token:
+        try:
+            dataset = load_dataset(hf_dataset, split=hf_split, token=hf_token)
+            auth_mode = "token"
+        except TypeError:
+            # Backward compatibility for older datasets versions.
+            try:
+                dataset = load_dataset(hf_dataset, split=hf_split, use_auth_token=hf_token)
+                auth_mode = "use_auth_token"
+            except Exception as exc:
+                auth_errors.append(f"use_auth_token load failed: {exc}")
+        except Exception as exc:
+            auth_errors.append(f"token load failed: {exc}")
+
+    if dataset is None:
+        try:
+            dataset = load_dataset(hf_dataset, split=hf_split)
+            auth_mode = "anonymous"
+        except Exception as exc:
+            auth_msg = "; ".join(auth_errors) if auth_errors else "none"
+            raise RuntimeError(
+                f"Failed to load AdvBench dataset `{hf_dataset}` split `{hf_split}`. "
+                f"Anonymous load error: {exc}. Token attempts: {auth_msg}"
+            ) from exc
+
     if len(dataset) == 0:
         raise RuntimeError(f"AdvBench dataset has no rows: {hf_dataset}:{hf_split}")
 
@@ -445,6 +503,7 @@ def ensure_advbench_instruction_file(
         "hf_dataset": hf_dataset,
         "hf_split": hf_split,
         "prompt_field": use_field,
+        "auth_mode": auth_mode,
         "num_prompts": len(rows),
     }
 
@@ -782,6 +841,18 @@ def parse_args() -> argparse.Namespace:
         default="",
         help="Optional field name for AdvBench prompt text, auto-detected when empty",
     )
+    parser.add_argument(
+        "--hf-token",
+        type=str,
+        default="",
+        help="Optional HuggingFace token override for loading private/gated datasets",
+    )
+    parser.add_argument(
+        "--hf-token-file",
+        type=str,
+        default="huggingface_token.txt",
+        help="Path (relative to project root) to HuggingFace token file",
+    )
 
     parser.add_argument("--lrs", type=str, default="1e-5,5e-5,1e-4")
     parser.add_argument("--epochs", type=str, default="5,10,20")
@@ -951,6 +1022,22 @@ def main() -> int:
         f"grad_acc={args.grad_acc_steps}, sample_num={args.sample_num}, "
         f"eval_steps={args.eval_steps}"
     )
+
+    if args.hf_token.strip():
+        hf_token: Optional[str] = args.hf_token.strip()
+        hf_token_info: Dict[str, object] = {
+            "token_source": "arg",
+            "token_loaded": True,
+            "status": "loaded",
+        }
+    else:
+        hf_token, hf_token_info = read_hf_token_from_file(root, args.hf_token_file)
+    print(
+        "HF token                   : "
+        f"source={hf_token_info.get('token_source')}, "
+        f"loaded={hf_token_info.get('token_loaded')}, "
+        f"status={hf_token_info.get('status')}"
+    )
     print("=" * 88)
 
     if args.dry_run:
@@ -994,6 +1081,7 @@ def main() -> int:
                 hf_dataset=args.advbench_hf_dataset,
                 hf_split=args.advbench_hf_split,
                 prompt_field=args.advbench_prompt_field,
+                hf_token=hf_token,
                 dry_run=args.dry_run,
             )
         except Exception as exc:
@@ -1029,6 +1117,7 @@ def main() -> int:
         "evaluation_config": {
             "safety_eval_datasets": safety_evals,
             "advbench_instruction": advbench_instruction_info,
+            "hf_token_config": hf_token_info,
             "utility_eval_tasks": utility_tasks,
         },
         "defaults": {
@@ -1051,6 +1140,7 @@ def main() -> int:
             "build_data_if_missing": args.build_data_if_missing,
             "delete_run_checkpoint": args.delete_run_checkpoint,
             "force_no_weights_only_load": args.force_no_weights_only_load,
+            "hf_token_file": args.hf_token_file,
             "continue_on_error": args.continue_on_error,
             "echo_mode": args.echo_mode,
             "dry_run": args.dry_run,

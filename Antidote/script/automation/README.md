@@ -69,6 +69,7 @@ Defaults:
 - safety eval datasets: BeaverTails + AdvBench
 - utility eval tasks: SST-2 + GSM8K + AGNews
 - run checkpoint cleanup: delete each run checkpoint after eval (to save disk)
+- AdvBench download auth: auto-read `huggingface_token.txt` (or pass `--hf-token`)
 
 ```bash
 python script/automation/run_sft_grid.py
