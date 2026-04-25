@@ -1,10 +1,11 @@
 # Automation Scripts for LISA Experiments
 
-This folder contains two scripts:
+This folder contains automation scripts:
 
 - `setup_venv.py`: create a Python virtual environment and install dependencies.
 - `run_lisa_grid.py`: run LISA sweeps with detailed progress, step logs, and JSON summaries.
 - `run_sft.py`: run SFT with dual-GPU settings, progress logs, and JSON summary.
+- `run_sft_grid.py`: run SFT attack sweeps (27 default runs) with detailed logs and JSON summaries.
 
 ## 1) Create environment
 
@@ -57,6 +58,33 @@ SFT outputs:
 - checkpoint: `ckpt/<model>_sft`
 - summary: `experiments/sft_runs/<timestamp>/summary.json`
 - logs: `experiments/sft_runs/<timestamp>/logs/*.log`
+
+## 2.6) Run SFT attack grid (27 runs by default)
+
+Defaults:
+
+- learning rates: 1e-5, 5e-5, 1e-4
+- epochs: 5, 10, 20
+- harmful ratios: 1%, 5%, 10%
+
+```bash
+python script/automation/run_sft_grid.py
+```
+
+Two-GPU memory-safe example:
+
+```bash
+python script/automation/run_sft_grid.py \
+  --train-gpu-ids 0,1 \
+  --max-memory-per-gpu 38GiB \
+  --use-gradient-checkpointing
+```
+
+Dry-run preview:
+
+```bash
+python script/automation/run_sft_grid.py --dry-run
+```
 
 ## Useful options
 
