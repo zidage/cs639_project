@@ -1,0 +1,1594 @@
+# Step: safety_eval_advbench
+# Start: 2026-04-27T10:06:07
+# CWD: /root/autodl-tmp/cs639_project/Antidote/poison/evaluation
+# Command:
+/root/miniconda3/bin/python eval_sentiment.py --input_path /root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_sft_f_0.1_5000_5e-05_20_sst2
+
+# Env overrides:
+TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1
+CUDA_VISIBLE_DEVICES=0
+
+/root/miniconda3/lib/python3.10/site-packages/transformers/utils/generic.py:311: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  torch.utils._pytree._register_pytree_node(
+/root/miniconda3/lib/python3.10/site-packages/transformers/utils/generic.py:311: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  torch.utils._pytree._register_pytree_node(
+/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]/root/miniconda3/lib/python3.10/site-packages/transformers/modeling_utils.py:484: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  return torch.load(checkpoint_file, map_location=map_location)
+
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:04<00:12,  4.03s/it]
+Loading checkpoint shards:  50%|█████     | 2/4 [00:07<00:07,  3.95s/it]
+Loading checkpoint shards:  75%|███████▌  | 3/4 [00:11<00:03,  3.96s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:13<00:00,  2.98s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:13<00:00,  3.34s/it]
+/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+You are using the default legacy behaviour of the <class 'transformers.models.llama.tokenization_llama.LlamaTokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thouroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00,  2.22it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00,  2.22it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.51it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 43.95it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.41it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.66it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 60.97it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 63.12it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.82it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.46it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 40.20it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.18it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.23it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.35it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.47it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.95it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.94it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.80it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.74it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.91it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.40it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.45it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.22it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.01it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.96it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.81it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.15it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 62.30it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 43.17it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.00it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 44.26it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.72it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.30it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 62.19it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.41it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.62it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.38it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.21it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.45it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.17it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.35it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.50it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.50it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.13it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.75it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.70it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.14it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.67it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.68it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.80it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.35it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.35it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 61.51it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.12it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.35it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.07it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.11it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.85it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.40it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.73it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.05it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.53it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.89it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.22it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.45it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.58it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.62it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.24it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.62it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.12it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.51it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.06it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.30it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.69it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.80it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 63.96it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 69.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.97it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.20it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.89it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.85it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.70it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.88it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.97it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.90it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.91it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.66it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.92it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.55it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.81it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.63it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.65it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.98it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.53it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.34it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.70it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.34it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.38it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.68it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.89it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.31it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.99it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.99it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.10it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.79it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 69.03it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.64it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.50it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.22it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.54it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.81it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.61it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.75it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.06it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.53it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.06it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.75it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.79it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.13it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.91it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.91it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.73it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.34it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.29it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.49it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.29it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.94it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.22it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.87it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.25it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.45it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.56it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.58it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.40it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.34it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.53it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.06it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.57it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.83it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.74it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.46it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.55it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.90it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.59it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.99it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.96it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.98it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.16it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.19it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.93it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.31it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.80it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.41it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.82it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.50it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.79it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.65it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.68it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.93it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.92it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.47it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.55it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.89it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.45it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.16it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.90it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.48it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.26it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.49it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.46it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.92it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.58it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.23it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.94it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.50it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.31it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.77it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.22it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.83it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.23it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.62it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.24it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.05it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.79it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.38it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.56it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.34it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.69it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.18it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.54it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.47it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.11it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.66it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.14it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 63.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.54it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.45it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.95it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.73it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.99it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.04it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.95it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.42it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.84it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.20it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.42it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.42it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.56it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.17it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.71it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.31it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.31it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.94it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.82it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.24it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.17it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.96it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.21it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.43it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.20it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 40.80it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.29it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.26it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.13it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.29it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.67it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.31it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.35it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.29it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.99it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.16it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.51it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.23it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 40.98it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.13it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.98it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.01it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.18it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.98it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.48it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.91it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.13it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.66it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.08it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.83it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.52it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.01it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.40it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.10it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.32it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.05it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.77it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.14it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.76it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.72it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.68it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.25it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.79it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.57it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.25it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.51it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 40.83it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.62it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.32it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.17it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.57it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.35it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.64it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.60it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.79it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.13it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.60it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.73it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.62it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.74it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.83it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.73it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.77it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.71it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.69it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.23it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.24it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.20it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.65it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.64it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.57it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.06it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.00it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.32it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.34it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.13it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.16it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.81it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.93it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 52.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.47it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.13it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.20it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.68it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.14it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.19it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.23it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.65it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.04it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.41it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.81it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.30it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.00it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.66it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.34it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.85it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.79it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.79it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.73it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.21it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.59it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.91it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.10it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.21it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.21it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.95it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.38it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.59it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.23it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.80it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.85it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.64it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 43.14it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.32it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.93it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.40it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.80it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 43.11it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.21it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.81it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.89it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.56it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.61it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.70it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 43.16it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.74it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.26it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 43.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.17it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.74it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.58it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.19it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.03it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.18it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.35it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.11it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.34it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.37it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.04it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.70it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.67it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.12it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.56it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.63it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.83it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.60it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.58it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.03it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.21it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.90it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.46it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.98it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.27it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.65it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.57it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.46it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.95it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.90it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.21it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.47it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.90it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.61it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 43.28it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.56it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.14it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.61it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.24it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.71it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.16it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.73it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 68.40it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.26it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.93it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.03it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.93it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.52it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.26it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.05it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.26it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.50it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.83it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 41.76it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.49it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.53it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.77it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.98it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.71it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.46it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.72it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.90it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.03it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.60it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.66it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 64.85it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.63it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.39it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.61it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 45.63it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.99it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.43it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 67.78it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 63.80it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.65it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.73it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 48.12it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.87it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.10it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 65.93it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.09it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.36it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.33it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.03it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.86it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.97it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.20it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 66.50it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.97it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 46.99it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.32it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.41it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 42.46it/s]
+
+Predicting:   0%|          | 0/1 [00:00<?, ?it/s]
+Predicting: 100%|██████████| 1/1 [00:00<00:00, 47.41it/s]
+final score:87.88
+input path: /root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_sft_f_0.1_5000_5e-05_20_sst2
+
+# End: 2026-04-27T10:06:56
+# Return code: 0
