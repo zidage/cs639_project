@@ -1,0 +1,202 @@
+{
+  "meta": {
+    "created_at": "2026-04-26T03:37:47",
+    "project_root": "/root/autodl-tmp/cs639_project/Antidote",
+    "experiment_root": "/root/autodl-tmp/cs639_project/Antidote/experiments/sft_grid/20260426_033736",
+    "model_path": "meta-llama/Llama-2-7b-hf",
+    "python_bin": "/root/miniconda3/bin/python",
+    "json_schema_version": "sft_grid_v2"
+  },
+  "attack_config": {
+    "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+    "base_lora_folder": "ckpt/Llama-2-7b-hf_sft",
+    "benign_task": "sst2",
+    "benign_dataset_path": "data/sst2.json"
+  },
+  "evaluation_config": {
+    "safety_eval_datasets": [
+      "beavertails",
+      "advbench"
+    ],
+    "advbench_instruction": {
+      "status": "ready",
+      "source": "generated_from_hf",
+      "path": "/root/autodl-tmp/cs639_project/Antidote/data/advbench_eval_instructions.json",
+      "hf_dataset": "walledai/AdvBench",
+      "hf_split": "train",
+      "prompt_field": "prompt",
+      "auth_mode": "token",
+      "num_prompts": 520
+    },
+    "hf_token_config": {
+      "token_file": "/root/autodl-tmp/cs639_project/Antidote/huggingface_token.txt",
+      "token_source": "file",
+      "token_loaded": true,
+      "status": "loaded"
+    },
+    "utility_eval_tasks": [
+      "sst2",
+      "gsm8k",
+      "agnews"
+    ]
+  },
+  "defaults": {
+    "sample_num": 5000,
+    "train_batch_size": 5,
+    "eval_batch_size": 5,
+    "grad_acc_steps": 1,
+    "save_steps": 100000,
+    "eval_steps": 2000,
+    "weight_decay": 0.1,
+    "warmup_ratio": 0.1,
+    "scheduler": "constant",
+    "logging_steps": 10,
+    "cache_dir": "cache",
+    "num_test_data": 1000,
+    "gpu_id": "0",
+    "max_memory_per_gpu": "",
+    "cpu_offload_gib": 0,
+    "use_gradient_checkpointing": false,
+    "build_data_if_missing": true,
+    "delete_run_checkpoint": true,
+    "force_no_weights_only_load": true,
+    "hf_token_file": "huggingface_token.txt",
+    "continue_on_error": false,
+    "echo_mode": "key",
+    "dry_run": false
+  },
+  "data_prep": {
+    "required_tasks": [
+      "agnews",
+      "gsm8k",
+      "sst2"
+    ],
+    "built": [],
+    "already_present": [
+      "/root/autodl-tmp/cs639_project/Antidote/data/agnews.json",
+      "/root/autodl-tmp/cs639_project/Antidote/data/gsm8k.json",
+      "/root/autodl-tmp/cs639_project/Antidote/data/sst2.json"
+    ],
+    "missing": []
+  },
+  "runs": [
+    {
+      "run_id": "run_001_lr1e-05_ep5_ratio0.01",
+      "index": 1,
+      "status": "failed",
+      "duration_sec": 963.603,
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_sft",
+        "gpu_id": "0",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/root/autodl-tmp/cs639_project/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k",
+          "agnews"
+        ]
+      },
+      "output_paths": {
+        "sft_attack_lora_output_dir": "/root/autodl-tmp/cs639_project/Antidote/ckpt/sst2/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2",
+          "advbench": "/root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2_sentiment_eval.json",
+          "advbench": "/root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/root/autodl-tmp/cs639_project/Antidote/data/sst2/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2",
+          "gsm8k": "/root/autodl-tmp/cs639_project/Antidote/data/gsm8k/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2",
+          "agnews": "/root/autodl-tmp/cs639_project/Antidote/data/agnews/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2"
+        },
+        "run_log_dir": "/root/autodl-tmp/cs639_project/Antidote/experiments/sft_grid/20260426_033736/run_001_lr1e-05_ep5_ratio0.01/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/root/autodl-tmp/cs639_project/Antidote/ckpt/sst2/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 807359311,
+        "checkpoint_size_gb_before_delete": 0.751912,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 906.24,
+          "log_file": "experiments/sft_grid/20260426_033736/run_001_lr1e-05_ep5_ratio0.01/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "failed",
+          "return_code": 1,
+          "duration_sec": 57.36,
+          "log_file": "experiments/sft_grid/20260426_033736/run_001_lr1e-05_ep5_ratio0.01/logs/safety_pred_beavertails.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": null,
+          "advbench": null
+        },
+        "harmful_score_percent": null,
+        "utility_scores_percent": {
+          "sst2": null,
+          "gsm8k": null,
+          "agnews": null
+        }
+      },
+      "errors": [
+        "Step safety_pred_beavertails failed with return code 1"
+      ]
+    }
+  ],
+  "aggregate": {
+    "total_runs": 1,
+    "successful_runs": 0,
+    "failed_runs": 1,
+    "best_beavertails_run": null
+  }
+}

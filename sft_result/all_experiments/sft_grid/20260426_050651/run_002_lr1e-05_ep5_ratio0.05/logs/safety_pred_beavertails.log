@@ -1,0 +1,56 @@
+# Step: safety_pred_beavertails
+# Start: 2026-04-26T06:33:50
+# CWD: /root/autodl-tmp/cs639_project/Antidote/poison/evaluation
+# Command:
+/root/miniconda3/bin/python pred.py --lora_folder /root/autodl-tmp/cs639_project/Antidote/ckpt/Llama-2-7b-hf_sft --lora_folder2 /root/autodl-tmp/cs639_project/Antidote/ckpt/sst2/Llama-2-7b-hf_sft_f_0.05_5000_1e-05_5_sst2 --model_folder meta-llama/Llama-2-7b-hf --output_path /root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_sft_f_0.05_5000_1e-05_5_sst2 --num_test_data 1000 --instruction_path BeaverTails
+
+# Env overrides:
+TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1
+CUDA_VISIBLE_DEVICES=0
+
+/root/miniconda3/lib/python3.10/site-packages/transformers/utils/generic.py:311: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  torch.utils._pytree._register_pytree_node(
+Namespace(model_folder='meta-llama/Llama-2-7b-hf', lora_folder='/root/autodl-tmp/cs639_project/Antidote/ckpt/Llama-2-7b-hf_sft', lora_folder2='/root/autodl-tmp/cs639_project/Antidote/ckpt/sst2/Llama-2-7b-hf_sft_f_0.05_5000_1e-05_5_sst2', instruction_path='BeaverTails', output_path='/root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_sft_f_0.05_5000_1e-05_5_sst2', cache_dir='../../cache', num_test_data=1000)
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs639_project/Antidote/poison/evaluation/pred.py", line 33, in <module>
+    dataset =load_dataset("PKU-Alignment/BeaverTails")
+  File "/root/miniconda3/lib/python3.10/site-packages/datasets/load.py", line 2129, in load_dataset
+    builder_instance = load_dataset_builder(
+  File "/root/miniconda3/lib/python3.10/site-packages/datasets/load.py", line 1815, in load_dataset_builder
+    dataset_module = dataset_module_factory(
+  File "/root/miniconda3/lib/python3.10/site-packages/datasets/load.py", line 1512, in dataset_module_factory
+    raise e1 from None
+  File "/root/miniconda3/lib/python3.10/site-packages/datasets/load.py", line 1496, in dataset_module_factory
+    ).get_module()
+  File "/root/miniconda3/lib/python3.10/site-packages/datasets/load.py", line 1048, in get_module
+    data_files = DataFilesDict.from_patterns(
+  File "/root/miniconda3/lib/python3.10/site-packages/datasets/data_files.py", line 686, in from_patterns
+    DataFilesList.from_patterns(
+  File "/root/miniconda3/lib/python3.10/site-packages/datasets/data_files.py", line 591, in from_patterns
+    resolve_pattern(
+  File "/root/miniconda3/lib/python3.10/site-packages/datasets/data_files.py", line 353, in resolve_pattern
+    for filepath, info in fs.glob(pattern, detail=True).items()
+  File "/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/hf_file_system.py", line 407, in glob
+    return super().glob(path, **kwargs)
+  File "/root/miniconda3/lib/python3.10/site-packages/fsspec/spec.py", line 580, in glob
+    return {path: self.info(path)}
+  File "/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/hf_file_system.py", line 527, in info
+    paths_info = self._api.get_paths_info(
+  File "/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/hf_api.py", line 3037, in get_paths_info
+    response = get_session().post(
+  File "/root/miniconda3/lib/python3.10/site-packages/requests/sessions.py", line 637, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+  File "/root/miniconda3/lib/python3.10/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/miniconda3/lib/python3.10/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 66, in send
+    return super().send(request, *args, **kwargs)
+  File "/root/miniconda3/lib/python3.10/site-packages/requests/adapters.py", line 513, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: (MaxRetryError("HTTPSConnectionPool(host='hf-mirror.com', port=443): Max retries exceeded with url: /api/datasets/PKU-Alignment/BeaverTails/paths-info/8401fe609d288129cc684a9b3be6a93e41cfe678 (Caused by ProxyError('Cannot connect to proxy.', RemoteDisconnected('Remote end closed connection without response')))"), '(Request ID: dccd8d60-3009-4240-8158-30f6c5f1e787)')
+
+# End: 2026-04-26T06:34:12
+# Return code: 1

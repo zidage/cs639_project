@@ -1,0 +1,53 @@
+# Step: safety_eval_beavertails
+# Start: 2026-04-26T04:43:25
+# CWD: /root/autodl-tmp/cs639_project/Antidote/poison/evaluation
+# Command:
+/root/miniconda3/bin/python eval_sentiment.py --input_path /root/autodl-tmp/cs639_project/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_sft_f_0.01_5000_1e-05_5_sst2
+
+# Env overrides:
+TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1
+CUDA_VISIBLE_DEVICES=0
+
+/root/miniconda3/lib/python3.10/site-packages/transformers/utils/generic.py:311: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  torch.utils._pytree._register_pytree_node(
+/root/miniconda3/lib/python3.10/site-packages/transformers/utils/generic.py:311: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  torch.utils._pytree._register_pytree_node(
+/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+
+Downloading shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Downloading shards:  25%|██▌       | 1/4 [05:55<17:47, 355.98s/it]
+Downloading shards:  50%|█████     | 2/4 [11:39<11:37, 348.80s/it]
+Downloading shards:  75%|███████▌  | 3/4 [17:44<05:55, 355.86s/it]
+Downloading shards: 100%|██████████| 4/4 [19:32<00:00, 258.29s/it]
+Downloading shards: 100%|██████████| 4/4 [19:32<00:00, 293.18s/it]
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]/root/miniconda3/lib/python3.10/site-packages/transformers/modeling_utils.py:484: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  return torch.load(checkpoint_file, map_location=map_location)
+
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:03<00:10,  3.63s/it]
+Loading checkpoint shards:  50%|█████     | 2/4 [00:07<00:07,  3.55s/it]
+Loading checkpoint shards:  75%|███████▌  | 3/4 [00:10<00:03,  3.55s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:11<00:00,  2.65s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:11<00:00,  2.98s/it]
+/root/miniconda3/lib/python3.10/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs639_project/Antidote/poison/evaluation/eval_sentiment.py", line 14, in <module>
+    model = QAModeration.from_pretrained(
+  File "/root/autodl-tmp/cs639_project/Antidote/poison/evaluation/moderation.py", line 139, in from_pretrained
+    tokenizer = AutoTokenizer.from_pretrained(
+  File "/root/miniconda3/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py", line 751, in from_pretrained
+    return tokenizer_class.from_pretrained(pretrained_model_name_or_path, *inputs, **kwargs)
+  File "/root/miniconda3/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1222, in __getattribute__
+    requires_backends(cls, cls._backends)
+  File "/root/miniconda3/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1210, in requires_backends
+    raise ImportError("".join(failed))
+ImportError: 
+LlamaTokenizer requires the SentencePiece library but it was not found in your environment. Checkout the instructions on the
+installation page of its repo: https://github.com/google/sentencepiece#installation and follow the ones
+that match your environment. Please note that you may need to restart your runtime after installation.
+
+
+# End: 2026-04-26T05:03:20
+# Return code: 1
