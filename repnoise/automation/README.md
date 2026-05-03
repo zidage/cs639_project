@@ -1,8 +1,7 @@
-# Automation Scripts for LISA Experiments
+# Automation Scripts for RepNoise Experiments
 
 This folder contains automation scripts:
 
-- `run_lisa_grid.py`: run LISA sweeps with detailed progress, step logs, and JSON summaries.
 - `run_repnoise.py`: run SFT with single-GPU settings, progress logs, and JSON summary.
 - `new_repnoise_grid.py`: run SFT attack sweeps (27 default runs) with detailed logs and JSON summaries.
 
