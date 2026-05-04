@@ -1,0 +1,1812 @@
+{
+  "meta": {
+    "created_at": "2026-05-03T04:16:48",
+    "project_root": "/home/fabien/cs639gpu/Antidote",
+    "experiment_root": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260503_041648",
+    "model_path": "meta-llama/Llama-2-7b-hf",
+    "python_bin": "/home/fabien/cs639gpu/venv3108/bin/python",
+    "json_schema_version": "repnoise2_grid_v2",
+    "merged_at": "2026-05-04T17:25:54",
+    "merged_from": [
+      "repnoise\\Resolved\\Copy of results_summary (1).json",
+      "repnoise\\Resolved\\Copy of results_summary.json",
+      "repnoise\\Resolved\\Copy of results_summary(1).json",
+      "repnoise\\Resolved\\Copy of results_summary(2).json"
+    ]
+  },
+  "attack_config": {
+    "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+    "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+    "benign_task": "sst2",
+    "benign_dataset_path": "data/sst2.json"
+  },
+  "evaluation_config": {
+    "safety_eval_datasets": [
+      "beavertails",
+      "advbench"
+    ],
+    "advbench_instruction": {
+      "status": "ready",
+      "source": "existing_file",
+      "path": "/home/fabien/cs639gpu/Antidote/data/advbench_eval_instructions.json",
+      "num_prompts": 520
+    },
+    "hf_token_config": {
+      "token_file": "/home/fabien/cs639gpu/Antidote/huggingface_token.txt",
+      "token_source": "file",
+      "token_loaded": true,
+      "status": "loaded"
+    },
+    "utility_eval_tasks": [
+      "sst2",
+      "gsm8k"
+    ]
+  },
+  "defaults": {
+    "sample_num": 5000,
+    "train_batch_size": 5,
+    "eval_batch_size": 5,
+    "grad_acc_steps": 1,
+    "save_steps": 100000,
+    "eval_steps": 2000,
+    "weight_decay": 0.1,
+    "warmup_ratio": 0.1,
+    "scheduler": "constant",
+    "logging_steps": 10,
+    "cache_dir": "cache",
+    "num_test_data": 1000,
+    "gpu_id": "4,5",
+    "max_memory_per_gpu": "",
+    "cpu_offload_gib": 0,
+    "use_gradient_checkpointing": false,
+    "build_data_if_missing": true,
+    "delete_run_checkpoint": true,
+    "force_no_weights_only_load": true,
+    "hf_token_file": "huggingface_token.txt",
+    "continue_on_error": false,
+    "echo_mode": "key",
+    "dry_run": false,
+    "start_iteration": 1,
+    "planned_runs_from_start": 2
+  },
+  "data_prep": {
+    "required_tasks": [
+      "gsm8k",
+      "sst2"
+    ],
+    "built": [],
+    "already_present": [
+      "/home/fabien/cs639gpu/Antidote/data/gsm8k.json",
+      "/home/fabien/cs639gpu/Antidote/data/sst2.json"
+    ],
+    "missing": []
+  },
+  "runs": [
+    {
+      "run_id": "run_001_lr0.0001_ep20_ratio0.01",
+      "index": 1,
+      "status": "success",
+      "duration_sec": 6959.974,
+      "variable_hyperparameters": {
+        "learning_rate": 0.0001,
+        "epochs": 20,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 0.0001,
+        "epochs": 20,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 7,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "0",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/content/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/content/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_20_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/content/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_20_sst2",
+          "advbench": "/content/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_20_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/content/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_20_sst2_sentiment_eval.json",
+          "advbench": "/content/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_20_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/content/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_20_sst2",
+          "gsm8k": "/content/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_20_sst2"
+        },
+        "run_log_dir": "/content/Antidote/experiments/repnoise2_grid/20260503_031130/run_001_lr0.0001_ep20_ratio0.01/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/content/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_20_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 808106546,
+        "checkpoint_size_gb_before_delete": 0.752608,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 2920.615,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_001_lr0.0001_ep20_ratio0.01/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1842.933,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_001_lr0.0001_ep20_ratio0.01/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 111.186,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_001_lr0.0001_ep20_ratio0.01/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1207.032,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_001_lr0.0001_ep20_ratio0.01/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 38.222,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_001_lr0.0001_ep20_ratio0.01/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 107.799,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_001_lr0.0001_ep20_ratio0.01/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 732.185,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_001_lr0.0001_ep20_ratio0.01/logs/utility_gsm8k.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 67.1,
+          "advbench": 64.81
+        },
+        "harmful_score_percent": 67.1,
+        "utility_scores_percent": {
+          "sst2": 96.1,
+          "gsm8k": 4.8
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_001_lr1e-05_ep20_ratio0.01",
+      "index": 1,
+      "status": "success",
+      "duration_sec": 6925.505,
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 20,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 1e-05,
+        "epochs": 20,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 7,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "0",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/content/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/content/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_20_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/content/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_20_sst2",
+          "advbench": "/content/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_20_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/content/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_20_sst2_sentiment_eval.json",
+          "advbench": "/content/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_20_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/content/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_20_sst2",
+          "gsm8k": "/content/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_20_sst2"
+        },
+        "run_log_dir": "/content/Antidote/experiments/repnoise2_grid/20260503_005458/run_001_lr1e-05_ep20_ratio0.01/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/content/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_20_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 808105963,
+        "checkpoint_size_gb_before_delete": 0.752607,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 2919.942,
+          "log_file": "experiments/repnoise2_grid/20260503_005458/run_001_lr1e-05_ep20_ratio0.01/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1679.68,
+          "log_file": "experiments/repnoise2_grid/20260503_005458/run_001_lr1e-05_ep20_ratio0.01/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 100.861,
+          "log_file": "experiments/repnoise2_grid/20260503_005458/run_001_lr1e-05_ep20_ratio0.01/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1425.235,
+          "log_file": "experiments/repnoise2_grid/20260503_005458/run_001_lr1e-05_ep20_ratio0.01/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 38.562,
+          "log_file": "experiments/repnoise2_grid/20260503_005458/run_001_lr1e-05_ep20_ratio0.01/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 112.223,
+          "log_file": "experiments/repnoise2_grid/20260503_005458/run_001_lr1e-05_ep20_ratio0.01/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 649.0,
+          "log_file": "experiments/repnoise2_grid/20260503_005458/run_001_lr1e-05_ep20_ratio0.01/logs/utility_gsm8k.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 67.8,
+          "advbench": 73.27
+        },
+        "harmful_score_percent": 67.8,
+        "utility_scores_percent": {
+          "sst2": 95.64,
+          "gsm8k": 4.1
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_001_lr1e-05_ep5_ratio0.01",
+      "index": 1,
+      "status": "success",
+      "duration_sec": 22377.592,
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "4,5",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k",
+          "agnews"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2_sentiment_eval.json",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2",
+          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2",
+          "agnews": "/home/fabien/cs639gpu/Antidote/data/agnews/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2"
+        },
+        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_5_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 807858622,
+        "checkpoint_size_gb_before_delete": 0.752377,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4285.883,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 5178.408,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1235.894,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4724.643,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 741.398,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1124.913,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 3249.536,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs/utility_gsm8k.log"
+        },
+        {
+          "name": "utility_agnews",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1836.755,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_001_lr1e-05_ep5_ratio0.01/logs/utility_agnews.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 56.0,
+          "advbench": 63.46
+        },
+        "harmful_score_percent": 56.0,
+        "utility_scores_percent": {
+          "sst2": 95.64,
+          "gsm8k": 4.9,
+          "agnews": 49.1
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_002_lr0.0001_ep20_ratio0.1",
+      "index": 2,
+      "status": "success",
+      "duration_sec": 7263.254,
+      "variable_hyperparameters": {
+        "learning_rate": 0.0001,
+        "epochs": 20,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 0.0001,
+        "epochs": 20,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 7,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "0",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/content/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/content/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_20_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/content/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_20_sst2",
+          "advbench": "/content/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_20_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/content/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_20_sst2_sentiment_eval.json",
+          "advbench": "/content/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_20_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/content/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_20_sst2",
+          "gsm8k": "/content/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_20_sst2"
+        },
+        "run_log_dir": "/content/Antidote/experiments/repnoise2_grid/20260503_031130/run_002_lr0.0001_ep20_ratio0.1/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/content/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_20_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 808107418,
+        "checkpoint_size_gb_before_delete": 0.752609,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 3198.625,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_002_lr0.0001_ep20_ratio0.1/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1803.421,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_002_lr0.0001_ep20_ratio0.1/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 59.869,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_002_lr0.0001_ep20_ratio0.1/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1410.88,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_002_lr0.0001_ep20_ratio0.1/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 40.695,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_002_lr0.0001_ep20_ratio0.1/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 107.207,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_002_lr0.0001_ep20_ratio0.1/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 642.556,
+          "log_file": "experiments/repnoise2_grid/20260503_031130/run_002_lr0.0001_ep20_ratio0.1/logs/utility_gsm8k.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 79.0,
+          "advbench": 85.38
+        },
+        "harmful_score_percent": 79.0,
+        "utility_scores_percent": {
+          "sst2": 95.76,
+          "gsm8k": 3.3
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_002_lr1e-05_ep5_ratio0.1",
+      "index": 2,
+      "status": "success",
+      "duration_sec": 14653.497,
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "4,5",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k",
+          "agnews"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2_sentiment_eval.json",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2",
+          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2",
+          "agnews": "/home/fabien/cs639gpu/Antidote/data/agnews/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2"
+        },
+        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_5_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 807858629,
+        "checkpoint_size_gb_before_delete": 0.752377,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4664.513,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4349.515,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 681.504,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 3036.171,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 105.931,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 203.469,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1342.793,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs/utility_gsm8k.log"
+        },
+        {
+          "name": "utility_agnews",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 269.593,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_002_lr1e-05_ep5_ratio0.1/logs/utility_agnews.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 76.8,
+          "advbench": 87.69
+        },
+        "harmful_score_percent": 76.8,
+        "utility_scores_percent": {
+          "sst2": 94.38,
+          "gsm8k": 4.2,
+          "agnews": 53.7
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_003_lr1e-05_ep10_ratio0.01",
+      "index": 3,
+      "status": "success",
+      "duration_sec": 15407.971,
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 10,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 1e-05,
+        "epochs": 10,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "4,5",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k",
+          "agnews"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2_sentiment_eval.json",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
+          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
+          "agnews": "/home/fabien/cs639gpu/Antidote/data/agnews/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2"
+        },
+        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 807990958,
+        "checkpoint_size_gb_before_delete": 0.7525,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 5595.894,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 3699.546,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 147.769,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 3492.608,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 99.222,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 205.604,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1850.109,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs/utility_gsm8k.log"
+        },
+        {
+          "name": "utility_agnews",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 317.161,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_003_lr1e-05_ep10_ratio0.01/logs/utility_agnews.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 61.2,
+          "advbench": 70.19
+        },
+        "harmful_score_percent": 61.2,
+        "utility_scores_percent": {
+          "sst2": 95.99,
+          "gsm8k": 5.0,
+          "agnews": 50.8
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_003_lr1e-05_ep5_ratio0.05",
+      "index": 3,
+      "status": "success",
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "output_paths": {
+        "run_log_dir": "repnoise\\Resolved\\run_003_lr1e-05_ep5_ratio0.05\\logs"
+      },
+      "steps": [
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_003_lr1e-05_ep5_ratio0.05\\logs\\safety_eval_advbench.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_003_lr1e-05_ep5_ratio0.05\\logs\\safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_003_lr1e-05_ep5_ratio0.05\\logs\\safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_003_lr1e-05_ep5_ratio0.05\\logs\\safety_pred_beavertails.log"
+        },
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_003_lr1e-05_ep5_ratio0.05\\logs\\train.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_003_lr1e-05_ep5_ratio0.05\\logs\\utility_gsm8k.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_003_lr1e-05_ep5_ratio0.05\\logs\\utility_sst2.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "advbench": 76.54,
+          "beavertails": 66.9
+        },
+        "harmful_score_percent": 66.9,
+        "utility_scores_percent": {
+          "gsm8k": 5.1,
+          "sst2": 95.3
+        }
+      },
+      "errors": [],
+      "reconstructed_from_logs": true
+    },
+    {
+      "run_id": "run_004_lr1e-05_ep10_ratio0.1",
+      "index": 4,
+      "status": "success",
+      "duration_sec": 28641.378,
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 10,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 1e-05,
+        "epochs": 10,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "4,5",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k",
+          "agnews"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2_sentiment_eval.json",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
+          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
+          "agnews": "/home/fabien/cs639gpu/Antidote/data/agnews/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2"
+        },
+        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 807990958,
+        "checkpoint_size_gb_before_delete": 0.7525,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 6084.902,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4231.484,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 2018.502,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 9055.013,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1457.815,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1387.584,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 3659.455,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs/utility_gsm8k.log"
+        },
+        {
+          "name": "utility_agnews",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 746.521,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_004_lr1e-05_ep10_ratio0.1/logs/utility_agnews.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 78.9,
+          "advbench": 85.77
+        },
+        "harmful_score_percent": 78.9,
+        "utility_scores_percent": {
+          "sst2": 95.87,
+          "gsm8k": 4.6,
+          "agnews": 54.9
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_005_lr0.0001_ep5_ratio0.01",
+      "index": 5,
+      "status": "success",
+      "duration_sec": 18836.939,
+      "variable_hyperparameters": {
+        "learning_rate": 0.0001,
+        "epochs": 5,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 0.0001,
+        "epochs": 5,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "4,5",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k",
+          "agnews"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2_sentiment_eval.json",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2",
+          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2",
+          "agnews": "/home/fabien/cs639gpu/Antidote/data/agnews/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2"
+        },
+        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_5_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 807859127,
+        "checkpoint_size_gb_before_delete": 0.752377,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4591.086,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 3886.274,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 870.748,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4128.349,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 736.247,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 894.144,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 2380.18,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs/utility_gsm8k.log"
+        },
+        {
+          "name": "utility_agnews",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1349.771,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_005_lr0.0001_ep5_ratio0.01/logs/utility_agnews.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 65.4,
+          "advbench": 66.73
+        },
+        "harmful_score_percent": 65.4,
+        "utility_scores_percent": {
+          "sst2": 95.53,
+          "gsm8k": 4.7,
+          "agnews": 46.3
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_005_lr1e-05_ep10_ratio0.05",
+      "index": 5,
+      "status": "success",
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 10,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 1e-05,
+        "epochs": 10,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "output_paths": {
+        "run_log_dir": "repnoise\\Resolved\\run_005_lr1e-05_ep10_ratio0.05\\logs"
+      },
+      "steps": [
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_005_lr1e-05_ep10_ratio0.05\\logs\\safety_eval_advbench.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_005_lr1e-05_ep10_ratio0.05\\logs\\safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_005_lr1e-05_ep10_ratio0.05\\logs\\safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_005_lr1e-05_ep10_ratio0.05\\logs\\safety_pred_beavertails.log"
+        },
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_005_lr1e-05_ep10_ratio0.05\\logs\\train.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_005_lr1e-05_ep10_ratio0.05\\logs\\utility_gsm8k.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_005_lr1e-05_ep10_ratio0.05\\logs\\utility_sst2.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "advbench": 84.42,
+          "beavertails": 75.6
+        },
+        "harmful_score_percent": 75.6,
+        "utility_scores_percent": {
+          "gsm8k": 4.7,
+          "sst2": 96.1
+        }
+      },
+      "errors": [],
+      "reconstructed_from_logs": true
+    },
+    {
+      "run_id": "run_006_lr0.0001_ep5_ratio0.1",
+      "index": 6,
+      "status": "success",
+      "duration_sec": 18234.33,
+      "variable_hyperparameters": {
+        "learning_rate": 0.0001,
+        "epochs": 5,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 0.0001,
+        "epochs": 5,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0,
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_repnoise2",
+        "gpu_id": "4,5",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": true
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {
+          "beavertails": "BeaverTails built-in prompts",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/advbench_eval_instructions.json"
+        },
+        "utility_evaluation_tasks": [
+          "sst2",
+          "gsm8k",
+          "agnews"
+        ]
+      },
+      "output_paths": {
+        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2",
+        "safety_pred_outputs": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2"
+        },
+        "safety_eval_jsons": {
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2_sentiment_eval.json",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2_sentiment_eval.json"
+        },
+        "utility_outputs": {
+          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2",
+          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2",
+          "agnews": "/home/fabien/cs639gpu/Antidote/data/agnews/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2"
+        },
+        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs"
+      },
+      "cleanup": {
+        "delete_run_checkpoint": true,
+        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_5_sst2",
+        "checkpoint_exists_before_cleanup": true,
+        "checkpoint_size_bytes_before_delete": 807859130,
+        "checkpoint_size_gb_before_delete": 0.752377,
+        "checkpoint_deleted": true,
+        "checkpoint_cleanup_status": "deleted",
+        "checkpoint_cleanup_error": null
+      },
+      "steps": [
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 3991.887,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs/train.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4991.726,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs/safety_pred_beavertails.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1010.294,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs/safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 4786.121,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs/safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 689.387,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs/safety_eval_advbench.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 981.13,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs/utility_sst2.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 1513.095,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs/utility_gsm8k.log"
+        },
+        {
+          "name": "utility_agnews",
+          "status": "success",
+          "return_code": 0,
+          "duration_sec": 270.519,
+          "log_file": "experiments/repnoise2_grid/20260501_171945/run_006_lr0.0001_ep5_ratio0.1/logs/utility_agnews.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "beavertails": 78.1,
+          "advbench": 85.58
+        },
+        "harmful_score_percent": 78.1,
+        "utility_scores_percent": {
+          "sst2": 95.64,
+          "gsm8k": 4.7,
+          "agnews": 67.8
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "run_009_lr0.0001_ep5_ratio0.05",
+      "index": 9,
+      "status": "success",
+      "variable_hyperparameters": {
+        "learning_rate": 0.0001,
+        "epochs": 5,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 0.0001,
+        "epochs": 5,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "output_paths": {
+        "run_log_dir": "repnoise\\Resolved\\run_009_lr0.0001_ep5_ratio0.05\\logs"
+      },
+      "steps": [
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_009_lr0.0001_ep5_ratio0.05\\logs\\safety_eval_advbench.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_009_lr0.0001_ep5_ratio0.05\\logs\\safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_009_lr0.0001_ep5_ratio0.05\\logs\\safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_009_lr0.0001_ep5_ratio0.05\\logs\\safety_pred_beavertails.log"
+        },
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_009_lr0.0001_ep5_ratio0.05\\logs\\train.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_009_lr0.0001_ep5_ratio0.05\\logs\\utility_gsm8k.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_009_lr0.0001_ep5_ratio0.05\\logs\\utility_sst2.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "advbench": 85.38,
+          "beavertails": 77.7
+        },
+        "harmful_score_percent": 77.7,
+        "utility_scores_percent": {
+          "gsm8k": 5.0,
+          "sst2": 95.53
+        }
+      },
+      "errors": [],
+      "reconstructed_from_logs": true
+    },
+    {
+      "run_id": "run_012_lr0.0001_ep10_ratio0.05",
+      "index": 12,
+      "status": "success",
+      "variable_hyperparameters": {
+        "learning_rate": 0.0001,
+        "epochs": 10,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "resolved_parameters": {
+        "learning_rate": 0.0001,
+        "epochs": 10,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "output_paths": {
+        "run_log_dir": "repnoise\\Resolved\\run_012_lr0.0001_ep10_ratio0.05\\logs"
+      },
+      "steps": [
+        {
+          "name": "safety_eval_advbench",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_012_lr0.0001_ep10_ratio0.05\\logs\\safety_eval_advbench.log"
+        },
+        {
+          "name": "safety_eval_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_012_lr0.0001_ep10_ratio0.05\\logs\\safety_eval_beavertails.log"
+        },
+        {
+          "name": "safety_pred_advbench",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_012_lr0.0001_ep10_ratio0.05\\logs\\safety_pred_advbench.log"
+        },
+        {
+          "name": "safety_pred_beavertails",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_012_lr0.0001_ep10_ratio0.05\\logs\\safety_pred_beavertails.log"
+        },
+        {
+          "name": "train",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_012_lr0.0001_ep10_ratio0.05\\logs\\train.log"
+        },
+        {
+          "name": "utility_gsm8k",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_012_lr0.0001_ep10_ratio0.05\\logs\\utility_gsm8k.log"
+        },
+        {
+          "name": "utility_sst2",
+          "status": "success",
+          "return_code": 0,
+          "log_file": "run_012_lr0.0001_ep10_ratio0.05\\logs\\utility_sst2.log"
+        }
+      ],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {
+          "advbench": 87.12,
+          "beavertails": 80.0
+        },
+        "harmful_score_percent": 80.0,
+        "utility_scores_percent": {
+          "gsm8k": 4.7,
+          "sst2": 95.3
+        }
+      },
+      "errors": [],
+      "reconstructed_from_logs": true
+    }
+  ],
+  "aggregate": {
+    "total_runs": 13,
+    "successful_runs": 13,
+    "failed_runs": 0,
+    "skipped_runs_without_data": 0,
+    "deduplicated_parameter_runs": 2,
+    "source_files": [
+      "repnoise\\Resolved\\Copy of results_summary (1).json",
+      "repnoise\\Resolved\\Copy of results_summary.json",
+      "repnoise\\Resolved\\Copy of results_summary(1).json",
+      "repnoise\\Resolved\\Copy of results_summary(2).json"
+    ],
+    "best_beavertails_run": {
+      "run_id": "run_001_lr1e-05_ep5_ratio0.01",
+      "harmful_score_percent_beavertails": 56.0,
+      "variable_hyperparameters": {
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.01,
+        "harmful_ratio_percent": 1.0
+      }
+    },
+    "best_harmful_runs": {
+      "advbench": {
+        "run_id": "run_001_lr1e-05_ep5_ratio0.01",
+        "advbench_percent": 63.46,
+        "variable_hyperparameters": {
+          "learning_rate": 1e-05,
+          "epochs": 5,
+          "harmful_ratio": 0.01,
+          "harmful_ratio_percent": 1.0
+        }
+      },
+      "beavertails": {
+        "run_id": "run_001_lr1e-05_ep5_ratio0.01",
+        "beavertails_percent": 56.0,
+        "variable_hyperparameters": {
+          "learning_rate": 1e-05,
+          "epochs": 5,
+          "harmful_ratio": 0.01,
+          "harmful_ratio_percent": 1.0
+        }
+      }
+    },
+    "best_utility_runs": {
+      "agnews": {
+        "run_id": "run_006_lr0.0001_ep5_ratio0.1",
+        "agnews_percent": 67.8,
+        "variable_hyperparameters": {
+          "learning_rate": 0.0001,
+          "epochs": 5,
+          "harmful_ratio": 0.1,
+          "harmful_ratio_percent": 10.0
+        }
+      },
+      "gsm8k": {
+        "run_id": "run_003_lr1e-05_ep5_ratio0.05",
+        "gsm8k_percent": 5.1,
+        "variable_hyperparameters": {
+          "learning_rate": 1e-05,
+          "epochs": 5,
+          "harmful_ratio": 0.05,
+          "harmful_ratio_percent": 5.0
+        }
+      },
+      "sst2": {
+        "run_id": "run_001_lr0.0001_ep20_ratio0.01",
+        "sst2_percent": 96.1,
+        "variable_hyperparameters": {
+          "learning_rate": 0.0001,
+          "epochs": 20,
+          "harmful_ratio": 0.01,
+          "harmful_ratio_percent": 1.0
+        }
+      }
+    },
+    "scanned_runs_from_logs": 13,
+    "reconstructed_runs_from_logs": 4,
+    "enriched_runs_from_logs": 9
+  }
+}
