@@ -1,8 +1,8 @@
 {
   "meta": {
-    "created_at": "2026-05-03T04:16:48",
+    "created_at": "2026-05-03T14:17:46",
     "project_root": "/home/fabien/cs639gpu/Antidote",
-    "experiment_root": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260503_041648",
+    "experiment_root": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260503_141746",
     "model_path": "meta-llama/Llama-2-7b-hf",
     "python_bin": "/home/fabien/cs639gpu/venv3108/bin/python",
     "json_schema_version": "repnoise2_grid_v2"
@@ -76,18 +76,18 @@
   },
   "runs": [
     {
-      "run_id": "run_001_lr1e-05_ep10_ratio0.01",
+      "run_id": "run_001_lr0.0001_ep10_ratio0.01",
       "index": 1,
       "status": "success",
-      "duration_sec": 16599.403,
+      "duration_sec": 16881.595,
       "variable_hyperparameters": {
-        "learning_rate": 1e-05,
+        "learning_rate": 0.0001,
         "epochs": 10,
         "harmful_ratio": 0.01,
         "harmful_ratio_percent": 1.0
       },
       "resolved_parameters": {
-        "learning_rate": 1e-05,
+        "learning_rate": 0.0001,
         "epochs": 10,
         "harmful_ratio": 0.01,
         "harmful_ratio_percent": 1.0,
@@ -128,27 +128,27 @@
         ]
       },
       "output_paths": {
-        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
+        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_10_sst2",
         "safety_pred_outputs": {
-          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
-          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2"
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_10_sst2",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_10_sst2"
         },
         "safety_eval_jsons": {
-          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2_sentiment_eval.json",
-          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2_sentiment_eval.json"
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_10_sst2_sentiment_eval.json",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_10_sst2_sentiment_eval.json"
         },
         "utility_outputs": {
-          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
-          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2"
+          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_10_sst2",
+          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_10_sst2"
         },
-        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260503_041648/run_001_lr1e-05_ep10_ratio0.01/logs"
+        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260503_141746/run_001_lr0.0001_ep10_ratio0.01/logs"
       },
       "cleanup": {
         "delete_run_checkpoint": true,
-        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_1e-05_10_sst2",
+        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.01_5000_0.0001_10_sst2",
         "checkpoint_exists_before_cleanup": true,
-        "checkpoint_size_bytes_before_delete": 807990957,
-        "checkpoint_size_gb_before_delete": 0.7525,
+        "checkpoint_size_bytes_before_delete": 808155017,
+        "checkpoint_size_gb_before_delete": 0.752653,
         "checkpoint_deleted": true,
         "checkpoint_cleanup_status": "deleted",
         "checkpoint_cleanup_error": null
@@ -158,78 +158,78 @@
           "name": "train",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 6639.27,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_001_lr1e-05_ep10_ratio0.01/logs/train.log"
+          "duration_sec": 5631.239,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_001_lr0.0001_ep10_ratio0.01/logs/train.log"
         },
         {
           "name": "safety_pred_beavertails",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 3701.937,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_001_lr1e-05_ep10_ratio0.01/logs/safety_pred_beavertails.log"
+          "duration_sec": 5172.224,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_001_lr0.0001_ep10_ratio0.01/logs/safety_pred_beavertails.log"
         },
         {
           "name": "safety_eval_beavertails",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 637.541,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_001_lr1e-05_ep10_ratio0.01/logs/safety_eval_beavertails.log"
+          "duration_sec": 1168.33,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_001_lr0.0001_ep10_ratio0.01/logs/safety_eval_beavertails.log"
         },
         {
           "name": "safety_pred_advbench",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 3484.599,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_001_lr1e-05_ep10_ratio0.01/logs/safety_pred_advbench.log"
+          "duration_sec": 2929.261,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_001_lr0.0001_ep10_ratio0.01/logs/safety_pred_advbench.log"
         },
         {
           "name": "safety_eval_advbench",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 99.051,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_001_lr1e-05_ep10_ratio0.01/logs/safety_eval_advbench.log"
+          "duration_sec": 129.747,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_001_lr0.0001_ep10_ratio0.01/logs/safety_eval_advbench.log"
         },
         {
           "name": "utility_sst2",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 195.653,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_001_lr1e-05_ep10_ratio0.01/logs/utility_sst2.log"
+          "duration_sec": 224.518,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_001_lr0.0001_ep10_ratio0.01/logs/utility_sst2.log"
         },
         {
           "name": "utility_gsm8k",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 1841.281,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_001_lr1e-05_ep10_ratio0.01/logs/utility_gsm8k.log"
+          "duration_sec": 1626.164,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_001_lr0.0001_ep10_ratio0.01/logs/utility_gsm8k.log"
         }
       ],
       "metrics": {
         "harmful_scores_percent_by_dataset": {
-          "beavertails": 61.2,
-          "advbench": 70.19
+          "beavertails": 64.3,
+          "advbench": 66.35
         },
-        "harmful_score_percent": 61.2,
+        "harmful_score_percent": 64.3,
         "utility_scores_percent": {
-          "sst2": 95.99,
-          "gsm8k": 5.0
+          "sst2": 95.3,
+          "gsm8k": 4.4
         }
       },
       "errors": []
     },
     {
-      "run_id": "run_002_lr1e-05_ep10_ratio0.1",
+      "run_id": "run_002_lr0.0001_ep10_ratio0.1",
       "index": 2,
       "status": "success",
-      "duration_sec": 17092.433,
+      "duration_sec": 14887.065,
       "variable_hyperparameters": {
-        "learning_rate": 1e-05,
+        "learning_rate": 0.0001,
         "epochs": 10,
         "harmful_ratio": 0.1,
         "harmful_ratio_percent": 10.0
       },
       "resolved_parameters": {
-        "learning_rate": 1e-05,
+        "learning_rate": 0.0001,
         "epochs": 10,
         "harmful_ratio": 0.1,
         "harmful_ratio_percent": 10.0,
@@ -270,27 +270,27 @@
         ]
       },
       "output_paths": {
-        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
+        "repnpise2_attack_lora_output_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_10_sst2",
         "safety_pred_outputs": {
-          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
-          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2"
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_10_sst2",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_10_sst2"
         },
         "safety_eval_jsons": {
-          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2_sentiment_eval.json",
-          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2_sentiment_eval.json"
+          "beavertails": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/beavertails/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_10_sst2_sentiment_eval.json",
+          "advbench": "/home/fabien/cs639gpu/Antidote/data/poison/sst2/advbench/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_10_sst2_sentiment_eval.json"
         },
         "utility_outputs": {
-          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
-          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2"
+          "sst2": "/home/fabien/cs639gpu/Antidote/data/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_10_sst2",
+          "gsm8k": "/home/fabien/cs639gpu/Antidote/data/gsm8k/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_10_sst2"
         },
-        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260503_041648/run_002_lr1e-05_ep10_ratio0.1/logs"
+        "run_log_dir": "/home/fabien/cs639gpu/Antidote/experiments/repnoise2_grid/20260503_141746/run_002_lr0.0001_ep10_ratio0.1/logs"
       },
       "cleanup": {
         "delete_run_checkpoint": true,
-        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_1e-05_10_sst2",
+        "checkpoint_dir": "/home/fabien/cs639gpu/Antidote/ckpt/sst2/Llama-2-7b-hf_repnpoise2_f_0.1_5000_0.0001_10_sst2",
         "checkpoint_exists_before_cleanup": true,
-        "checkpoint_size_bytes_before_delete": 807990959,
-        "checkpoint_size_gb_before_delete": 0.7525,
+        "checkpoint_size_bytes_before_delete": 807991950,
+        "checkpoint_size_gb_before_delete": 0.752501,
         "checkpoint_deleted": true,
         "checkpoint_cleanup_status": "deleted",
         "checkpoint_cleanup_error": null
@@ -300,61 +300,61 @@
           "name": "train",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 6071.89,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_002_lr1e-05_ep10_ratio0.1/logs/train.log"
+          "duration_sec": 6194.045,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_002_lr0.0001_ep10_ratio0.1/logs/train.log"
         },
         {
           "name": "safety_pred_beavertails",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 4232.136,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_002_lr1e-05_ep10_ratio0.1/logs/safety_pred_beavertails.log"
+          "duration_sec": 3640.514,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_002_lr0.0001_ep10_ratio0.1/logs/safety_pred_beavertails.log"
         },
         {
           "name": "safety_eval_beavertails",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 796.495,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_002_lr1e-05_ep10_ratio0.1/logs/safety_eval_beavertails.log"
+          "duration_sec": 173.84,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_002_lr0.0001_ep10_ratio0.1/logs/safety_eval_beavertails.log"
         },
         {
           "name": "safety_pred_advbench",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 3645.278,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_002_lr1e-05_ep10_ratio0.1/logs/safety_pred_advbench.log"
+          "duration_sec": 3089.376,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_002_lr0.0001_ep10_ratio0.1/logs/safety_pred_advbench.log"
         },
         {
           "name": "safety_eval_advbench",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 867.25,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_002_lr1e-05_ep10_ratio0.1/logs/safety_eval_advbench.log"
+          "duration_sec": 123.166,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_002_lr0.0001_ep10_ratio0.1/logs/safety_eval_advbench.log"
         },
         {
           "name": "utility_sst2",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 208.748,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_002_lr1e-05_ep10_ratio0.1/logs/utility_sst2.log"
+          "duration_sec": 221.961,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_002_lr0.0001_ep10_ratio0.1/logs/utility_sst2.log"
         },
         {
           "name": "utility_gsm8k",
           "status": "success",
           "return_code": 0,
-          "duration_sec": 1270.549,
-          "log_file": "experiments/repnoise2_grid/20260503_041648/run_002_lr1e-05_ep10_ratio0.1/logs/utility_gsm8k.log"
+          "duration_sec": 1444.148,
+          "log_file": "experiments/repnoise2_grid/20260503_141746/run_002_lr0.0001_ep10_ratio0.1/logs/utility_gsm8k.log"
         }
       ],
       "metrics": {
         "harmful_scores_percent_by_dataset": {
-          "beavertails": 78.9,
-          "advbench": 85.77
+          "beavertails": 79.5,
+          "advbench": 82.88
         },
-        "harmful_score_percent": 78.9,
+        "harmful_score_percent": 79.5,
         "utility_scores_percent": {
-          "sst2": 95.87,
-          "gsm8k": 4.6
+          "sst2": 94.84,
+          "gsm8k": 3.6
         }
       },
       "errors": []
@@ -365,10 +365,10 @@
     "successful_runs": 2,
     "failed_runs": 0,
     "best_beavertails_run": {
-      "run_id": "run_001_lr1e-05_ep10_ratio0.01",
-      "harmful_score_percent_beavertails": 61.2,
+      "run_id": "run_001_lr0.0001_ep10_ratio0.01",
+      "harmful_score_percent_beavertails": 64.3,
       "variable_hyperparameters": {
-        "learning_rate": 1e-05,
+        "learning_rate": 0.0001,
         "epochs": 10,
         "harmful_ratio": 0.01,
         "harmful_ratio_percent": 1.0
