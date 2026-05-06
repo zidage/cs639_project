@@ -1,0 +1,3 @@
+AntidoteBackup/ckpt/beavertails/antidote_mixed_r001_lr1e4_ep5_dr02_sn2000
+AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e5_ep5_dr02_sn2000
+AntidoteBackup/ckpt/beavertails/attack_mixed_r001_lr1e5_ep5_sn5000
