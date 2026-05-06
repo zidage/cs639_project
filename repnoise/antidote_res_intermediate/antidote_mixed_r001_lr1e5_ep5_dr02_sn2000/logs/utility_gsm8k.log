@@ -1,0 +1,35 @@
+# Step: utility_gsm8k
+# Start: 2026-05-05T23:38:40
+# CWD: /home/fabien/cs639gpu/Antidote/gsm8k
+# Command:
+/home/fabien/cs639gpu/venv3108/bin/python pred_eval.py --lora_folder /home/fabien/cs639gpu/Antidote/ckpt/Llama-2-7b-hf_sft_paper --lora_folder2 /home/fabien/cs639gpu/Antidote/AntidoteBackup/ckpt/beavertails/antidote_mixed_r001_lr1e5_ep5_dr02_sn2000 --model_folder meta-llama/Llama-2-7b-hf --output_path /home/fabien/cs639gpu/Antidote/data/gsm8k/AntidoteBackup/ckpt/beavertails/antidote_mixed_r001_lr1e5_ep5_dr02_sn2000 --num_test_data 1000
+
+# Env overrides:
+TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1
+CUDA_VISIBLE_DEVICES=5,6,7
+
+/home/fabien/cs639gpu/venv3108/lib/python3.10/site-packages/transformers/utils/generic.py:311: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  torch.utils._pytree._register_pytree_node(
+/home/fabien/cs639gpu/venv3108/lib/python3.10/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Namespace(model_folder='meta-llama/Llama-2-7b-hf', lora_folder='/home/fabien/cs639gpu/Antidote/ckpt/Llama-2-7b-hf_sft_paper', lora_folder2='/home/fabien/cs639gpu/Antidote/AntidoteBackup/ckpt/beavertails/antidote_mixed_r001_lr1e5_ep5_dr02_sn2000', output_path='/home/fabien/cs639gpu/Antidote/data/gsm8k/AntidoteBackup/ckpt/beavertails/antidote_mixed_r001_lr1e5_ep5_dr02_sn2000', cache_dir='../cache', num_test_data=1000)
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:   0%|          | 0/2 [04:33<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/fabien/cs639gpu/Antidote/gsm8k/pred_eval.py", line 43, in <module>
+    model = AutoModelForCausalLM.from_pretrained(args.model_folder, cache_dir=args.cache_dir, load_in_8bit=False, device_map="auto",   token = access_token )
+  File "/home/fabien/cs639gpu/venv3108/lib/python3.10/site-packages/transformers/models/auto/auto_factory.py", line 565, in from_pretrained
+    return model_class.from_pretrained(
+  File "/home/fabien/cs639gpu/venv3108/lib/python3.10/site-packages/transformers/modeling_utils.py", line 3307, in from_pretrained
+    ) = cls._load_pretrained_model(
+  File "/home/fabien/cs639gpu/venv3108/lib/python3.10/site-packages/transformers/modeling_utils.py", line 3695, in _load_pretrained_model
+    new_error_msgs, offload_index, state_dict_index = _load_state_dict_into_meta_model(
+  File "/home/fabien/cs639gpu/venv3108/lib/python3.10/site-packages/transformers/modeling_utils.py", line 741, in _load_state_dict_into_meta_model
+    set_module_tensor_to_device(model, param_name, param_device, **set_module_kwargs)
+  File "/home/fabien/cs639gpu/venv3108/lib/python3.10/site-packages/accelerate/utils/modeling.py", line 404, in set_module_tensor_to_device
+    new_value = value.to(device)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 172.00 MiB. GPU 2 has a total capacity of 10.57 GiB of which 144.06 MiB is free. Process 498905 has 9.52 GiB memory in use. Including non-PyTorch memory, this process has 930.00 MiB memory in use. Of the allocated memory 772.05 MiB is allocated by PyTorch, and 1.95 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+# End: 2026-05-05T23:44:52
+# Return code: 1
