@@ -1,8 +1,9 @@
 # Aggregated Results Utilities
 
-This directory contains two small scripts for collecting experiment result JSON files and rendering LaTeX tables:
+This directory contains scripts for collecting experiment result JSON files and rendering LaTeX tables:
 
 - `merge_results_summaries.py`: merges one or more `results_summary*.json` files into one deduplicated summary.
+- `convert_flat_results_summary.py`: converts flat per-benchmark result lists, such as Vaccine outputs, into merged `results_summary` format.
 - `generate_latex_tables.py`: reads one or more merged summaries and generates LaTeX result tables.
 
 The scripts use only the Python standard library.
@@ -64,7 +65,30 @@ The script can parse metric values from logs named:
 - `safety_eval_<dataset>.log`, using the last `final score:<number>` line.
 - `utility_<task>.log`, using the last line that contains only a number.
 
-## 2. Generate LaTeX Tables
+## 2. Convert Flat Benchmark Results
+
+Use `convert_flat_results_summary.py` when a method writes Vaccine-style flat JSON files where each file is a top-level list of run records.
+
+Single-file conversion:
+
+```powershell
+python aggregated_results\convert_flat_results_summary.py `
+  aggregated_results\results_summary_merged_vaccine.json `
+  -o aggregated_results\results_summary_merged_vaccine_converted.json
+```
+
+Folder conversion, useful when each benchmark has a separate JSON file:
+
+```powershell
+python aggregated_results\convert_flat_results_summary.py `
+  --input-dir path\to\vaccine_benchmark_jsons `
+  --glob "*.json" `
+  -o aggregated_results\results_summary_merged_vaccine_converted.json
+```
+
+The converter groups rows by method, model, rho, sample size, learning rate, epochs, and poison/harmful ratio. Metrics like `sst2_accuracy`, `gsm8k_accuracy`, and `agnews_accuracy` are merged into `metrics.utility_scores_percent` for the same run. Fields that do not exist in the flat input are left blank in the converted summary.
+
+## 3. Generate LaTeX Tables
 
 Use `generate_latex_tables.py` after producing merged summaries.
 
