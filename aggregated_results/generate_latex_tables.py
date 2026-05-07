@@ -3,7 +3,12 @@
 
 Each evaluation metric gets one learning-rate-by-epoch table per harmful ratio.
 Each table uses one method row per learning-rate setting. Missing values are
-rendered as "--".
+rendered as "--". Antidote re-evaluation summaries can use checkpoint-only
+parameters when the checkpoint name encodes ratio, learning rate, and epochs.
+When both attack_mixed and antidote_mixed checkpoints are present, the Antidote
+checkpoint is used by default because attack_mixed is the pre-defense baseline.
+Flat Vaccine result lists are also supported and normalized into the same
+internal summary shape.
 """
 
 from __future__ import annotations
@@ -18,6 +23,12 @@ from typing import Any
 
 
 PARAMETER_KEYS = ("learning_rate", "epochs", "harmful_ratio")
+CHECKPOINT_RE = re.compile(
+    r"(?P<variant>attack|antidote)_mixed_"
+    r"r(?P<harmful_ratio>\d+)_"
+    r"lr(?P<learning_rate>[^_]+)_"
+    r"ep(?P<epochs>\d+)"
+)
 
 
 @dataclass(frozen=True)
@@ -26,6 +37,7 @@ class MethodResults:
     path: Path
     summary: dict[str, Any]
     runs_by_key: dict[tuple[str, str, str], dict[str, Any]]
+    variant: str | None = None
 
 
 @dataclass(frozen=True)
@@ -35,7 +47,7 @@ class Metric:
     higher_is_better: bool
 
 
-def load_json(path: Path) -> dict[str, Any]:
+def load_json(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -59,11 +71,49 @@ def normalize_decimal(value: Any) -> str:
         return str(value)
 
 
+def parse_compact_decimal(value: str) -> str:
+    if re.fullmatch(r"\d+(?:\.\d+)?e\d+", value):
+        base, exponent = value.split("e", 1)
+        return normalize_decimal(f"{base}e-{exponent}")
+    return normalize_decimal(value)
+
+
+def checkpoint_metadata(run: dict[str, Any]) -> dict[str, str] | None:
+    params = run.get("variable_hyperparameters") or run.get("resolved_parameters") or {}
+    checkpoint = params.get("checkpoint") or run.get("run_id")
+    if not checkpoint:
+        return None
+
+    match = CHECKPOINT_RE.search(str(checkpoint))
+    if not match:
+        return None
+
+    ratio_digits = match.group("harmful_ratio")
+    ratio = Decimal(int(ratio_digits)) / (Decimal(10) ** (len(ratio_digits) - 1))
+    return {
+        "variant": match.group("variant"),
+        "learning_rate": parse_compact_decimal(match.group("learning_rate")),
+        "epochs": normalize_decimal(match.group("epochs")),
+        "harmful_ratio": normalize_decimal(ratio),
+    }
+
+
 def parameter_key(run: dict[str, Any]) -> tuple[str, str, str] | None:
     params = run.get("variable_hyperparameters") or run.get("resolved_parameters") or {}
-    if any(key not in params for key in PARAMETER_KEYS):
+    if all(key in params and params[key] not in (None, "") for key in PARAMETER_KEYS):
+        return tuple(normalize_decimal(params[key]) for key in PARAMETER_KEYS)
+
+    metadata = checkpoint_metadata(run)
+    if metadata is None:
         return None
-    return tuple(normalize_decimal(params[key]) for key in PARAMETER_KEYS)
+    return tuple(metadata[key] for key in PARAMETER_KEYS)
+
+
+def checkpoint_variant(run: dict[str, Any]) -> str | None:
+    metadata = checkpoint_metadata(run)
+    if metadata is None:
+        return None
+    return metadata["variant"]
 
 
 def run_quality(run: dict[str, Any], index: int) -> tuple[int, int, int]:
@@ -82,14 +132,130 @@ def parse_summary_arg(value: str) -> tuple[str, Path]:
     return path.stem.replace("results_summary_", "").replace("results_summary", "SFT") or path.stem, path
 
 
-def load_method(value: str) -> MethodResults:
-    name, path = parse_summary_arg(value)
-    summary = load_json(path)
+def split_attack_data_mix(value: Any) -> tuple[str | None, str | None]:
+    if not isinstance(value, str):
+        return None, None
+    parts = [part.strip() for part in value.split("+", 1)]
+    if len(parts) != 2:
+        return value, None
+    return parts[0] or None, parts[1] or None
+
+
+def common_value(rows: list[dict[str, Any]], key: str) -> Any:
+    values = [row[key] for row in rows if key in row and row[key] not in (None, "")]
+    if not values:
+        return None
+    first = values[0]
+    if all(value == first for value in values):
+        return first
+    return None
+
+
+def flat_utility_scores(row: dict[str, Any]) -> dict[str, Any]:
+    scores: dict[str, Any] = {}
+    for key, value in row.items():
+        if not key.endswith("_accuracy"):
+            continue
+        if numeric_metric_count(value) == 0:
+            continue
+        task = key.removesuffix("_accuracy")
+        scores[task] = value
+    return scores
+
+
+def normalize_flat_summary(name: str, raw_runs: list[Any]) -> dict[str, Any]:
+    rows = [row for row in raw_runs if isinstance(row, dict)]
+    first = rows[0] if rows else {}
+    attack_dataset, benign_dataset = split_attack_data_mix(first.get("attack_data"))
+    utility_tasks = sorted({task for row in rows for task in flat_utility_scores(row)})
+
+    summary: dict[str, Any] = {
+        "meta": {"model_path": first.get("model_path") or first.get("model")},
+        "attack_config": {
+            "attack_dataset": attack_dataset,
+            "benign_dataset_path": benign_dataset,
+            "benign_task": first.get("dataset"),
+        },
+        "evaluation_config": {
+            "safety_eval_datasets": [],
+            "utility_eval_tasks": utility_tasks,
+        },
+        "defaults": {
+            "sample_num": common_value(rows, "sample_num"),
+            "model_path": common_value(rows, "model_path") or common_value(rows, "model"),
+        },
+        "runs": [],
+        "aggregate": {},
+    }
+
+    for index, row in enumerate(rows):
+        harmful_ratio = row.get("harmful_ratio", row.get("poison_ratio"))
+        variable_hyperparameters = {
+            "learning_rate": row.get("learning_rate"),
+            "epochs": row.get("epochs"),
+            "harmful_ratio": harmful_ratio,
+        }
+        if harmful_ratio is not None:
+            try:
+                variable_hyperparameters["harmful_ratio_percent"] = float(harmful_ratio) * 100
+            except (TypeError, ValueError):
+                pass
+
+        resolved_parameters = {
+            **variable_hyperparameters,
+            "sample_num": row.get("sample_num"),
+            "model_path": row.get("model_path") or row.get("model"),
+            "rho": row.get("rho"),
+            "alignment_checkpoint": row.get("alignment_checkpoint"),
+            "attack_checkpoint": row.get("attack_checkpoint"),
+        }
+        metrics = {"utility_scores_percent": flat_utility_scores(row)}
+        status = row.get("status")
+
+        summary["runs"].append(
+            {
+                "run_id": row.get("attack_checkpoint") or f"{name}_grid_{row.get('grid_index', index)}",
+                "index": row.get("grid_index", index),
+                "status": "success" if status == "completed" else status,
+                "variable_hyperparameters": variable_hyperparameters,
+                "resolved_parameters": resolved_parameters,
+                "datasets": {
+                    "attack_training_dataset": attack_dataset,
+                    "benign_training_dataset": benign_dataset,
+                    "utility_evaluation_tasks": utility_tasks,
+                },
+                "output_paths": {
+                    key: value
+                    for key, value in row.items()
+                    if key.endswith("_output") and value not in (None, "")
+                },
+                "metrics": metrics,
+                "errors": [],
+                "raw_flat_result": row,
+            }
+        )
+
+    return summary
+
+
+def normalize_summary(name: str, raw_summary: Any) -> dict[str, Any]:
+    if isinstance(raw_summary, dict):
+        return raw_summary
+    if isinstance(raw_summary, list):
+        return normalize_flat_summary(name, raw_summary)
+    raise TypeError(f"Unsupported summary JSON shape: {type(raw_summary).__name__}")
+
+
+def build_method(
+    name: str,
+    path: Path,
+    summary: dict[str, Any],
+    runs: list[dict[str, Any]],
+    variant: str | None,
+) -> MethodResults:
     runs_by_key: dict[tuple[str, str, str], tuple[dict[str, Any], tuple[int, int, int]]] = {}
 
-    for index, run in enumerate(summary.get("runs", [])):
-        if numeric_metric_count(run.get("metrics")) == 0:
-            continue
+    for index, run in enumerate(runs):
         key = parameter_key(run)
         if key is None:
             continue
@@ -103,7 +269,36 @@ def load_method(value: str) -> MethodResults:
         path=path,
         summary=summary,
         runs_by_key={key: item[0] for key, item in runs_by_key.items()},
+        variant=variant,
     )
+
+
+def load_methods(value: str, include_antidote_attack_baseline: bool = False) -> list[MethodResults]:
+    name, path = parse_summary_arg(value)
+    summary = normalize_summary(name, load_json(path))
+    runs: list[dict[str, Any]] = []
+    for run in summary.get("runs", []):
+        if numeric_metric_count(run.get("metrics")) == 0:
+            continue
+        runs.append(run)
+
+    variant_order = {"attack": 0, "antidote": 1}
+    variants = sorted(
+        {variant for run in runs if (variant := checkpoint_variant(run))},
+        key=lambda variant: (variant_order.get(variant, 99), variant),
+    )
+    if len(variants) <= 1:
+        return [build_method(name, path, summary, runs, variants[0] if variants else None)]
+
+    methods: list[MethodResults] = []
+    for variant in variants:
+        if variant == "attack" and not include_antidote_attack_baseline:
+            continue
+
+        variant_runs = [run for run in runs if checkpoint_variant(run) == variant]
+        method_name = name if variant == "antidote" else f"{name} ({variant} baseline)"
+        methods.append(build_method(method_name, path, summary, variant_runs, variant))
+    return methods
 
 
 def discover_metrics(methods: list[MethodResults]) -> list[Metric]:
@@ -392,13 +587,22 @@ def parse_args() -> argparse.Namespace:
         default=Path("sft_result/results_tables.tex"),
         help="Output LaTeX fragment path.",
     )
+    parser.add_argument(
+        "--include-antidote-attack-baseline",
+        action="store_true",
+        help="Also render attack_mixed checkpoints from Antidote summaries as a pre-defense baseline.",
+    )
     parser.add_argument("--decimals", type=int, default=2, help="Maximum decimals to print.")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    methods = [load_method(value) for value in args.summary]
+    methods = [
+        method
+        for value in args.summary
+        for method in load_methods(value, args.include_antidote_attack_baseline)
+    ]
     latex = render_latex(methods, args.decimals)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(latex, encoding="utf-8")

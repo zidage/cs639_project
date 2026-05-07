@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Merge grid result_summary JSON files.
+"""Merge result_summary JSON files.
 
 Only runs with at least one numeric metric are included. Runs are deduplicated by
-their grid parameters: learning_rate, epochs, and harmful_ratio. By default, the
-script also scans sibling run_*/logs directories and reconstructs missing runs
-from log files when the JSON summaries are incomplete.
+their variable parameters. Legacy grid summaries use learning_rate, epochs, and
+harmful_ratio. Antidote re-evaluation summaries use checkpoint. Log scanning is
+disabled by default because log formats vary between experiment types.
 """
 
 from __future__ import annotations
@@ -19,7 +19,9 @@ from pathlib import Path
 from typing import Any
 
 
-PARAMETER_KEYS = ("learning_rate", "epochs", "harmful_ratio")
+LEGACY_GRID_PARAMETER_KEYS = ("learning_rate", "epochs", "harmful_ratio")
+CHECKPOINT_PARAMETER_KEYS = ("checkpoint",)
+DEDUPE_KEY_CANDIDATES = (LEGACY_GRID_PARAMETER_KEYS, CHECKPOINT_PARAMETER_KEYS)
 RUN_DIR_RE = re.compile(
     r"^run_(?P<index>\d+)_lr(?P<learning_rate>.+?)_ep(?P<epochs>\d+)_ratio(?P<harmful_ratio>.+)$"
 )
@@ -74,13 +76,29 @@ def normalize_param(value: Any) -> str:
         return str(value)
 
 
-def parameter_key(run: dict[str, Any]) -> tuple[str, str, str]:
+def is_scalar_parameter(value: Any) -> bool:
+    return not isinstance(value, (dict, list))
+
+
+def parameter_key(run: dict[str, Any]) -> tuple[tuple[str, str], ...]:
     params = run.get("variable_hyperparameters") or run.get("resolved_parameters") or {}
-    missing = [key for key in PARAMETER_KEYS if key not in params]
-    if missing:
-        run_id = run.get("run_id", "<unknown>")
-        raise ValueError(f"Run {run_id} is missing parameter(s): {', '.join(missing)}")
-    return tuple(normalize_param(params[key]) for key in PARAMETER_KEYS)
+    for candidate_keys in DEDUPE_KEY_CANDIDATES:
+        if all(key in params for key in candidate_keys):
+            return tuple((key, normalize_param(params[key])) for key in candidate_keys)
+
+    scalar_items = [
+        (str(key), normalize_param(value))
+        for key, value in params.items()
+        if is_scalar_parameter(value)
+    ]
+    if scalar_items:
+        return tuple(sorted(scalar_items))
+
+    run_id = run.get("run_id")
+    if run_id:
+        return (("run_id", str(run_id)),)
+
+    raise ValueError("Run is missing deduplication parameters and run_id.")
 
 
 def run_quality(run: dict[str, Any], source_index: int, run_index: int) -> tuple[int, int, int, int]:
@@ -105,6 +123,44 @@ def source_roots(paths: list[Path]) -> list[Path]:
         if root not in roots:
             roots.append(root)
     return roots
+
+
+def is_results_summary_json(path: Path) -> bool:
+    try:
+        data = load_json(path)
+    except (OSError, json.JSONDecodeError):
+        return False
+    return isinstance(data, dict) and isinstance(data.get("runs"), list)
+
+
+def collect_input_paths(
+    inputs: list[Path], input_dirs: list[Path] | None, output_path: Path
+) -> list[Path]:
+    paths: list[Path] = []
+    seen: set[Path] = set()
+    output_resolved = output_path.resolve()
+
+    def add_path(path: Path, require_summary_shape: bool) -> None:
+        resolved = path.resolve()
+        if resolved == output_resolved or resolved in seen:
+            return
+        if require_summary_shape and not is_results_summary_json(path):
+            return
+        seen.add(resolved)
+        paths.append(path)
+
+    for path in inputs:
+        add_path(path, require_summary_shape=False)
+
+    for root in input_dirs or []:
+        if root.is_file():
+            add_path(root, require_summary_shape=True)
+            continue
+        for path in sorted(root.rglob("*.json")):
+            if path.is_file():
+                add_path(path, require_summary_shape=True)
+
+    return paths
 
 
 def parse_run_dir_name(path: Path) -> dict[str, Any] | None:
@@ -316,14 +372,14 @@ def build_aggregate(
 
 
 def merge_summaries(
-    paths: list[Path], scan_run_dirs: bool = True, run_roots: list[Path] | None = None
+    paths: list[Path], scan_run_dirs: bool = False, run_roots: list[Path] | None = None
 ) -> dict[str, Any]:
     if not paths:
         raise ValueError("At least one input JSON is required.")
 
     loaded = [load_json(path) for path in paths]
     merged = copy.deepcopy(loaded[0])
-    selected: dict[tuple[str, str, str], tuple[dict[str, Any], tuple[int, int, int, int]]] = {}
+    selected: dict[tuple[tuple[str, str], ...], tuple[dict[str, Any], tuple[int, int, int, int]]] = {}
     skipped_without_data = 0
     duplicate_count = 0
 
@@ -392,9 +448,15 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "inputs",
-        nargs="+",
+        nargs="*",
         type=Path,
         help="Input results_summary JSON files.",
+    )
+    parser.add_argument(
+        "--input-dir",
+        action="append",
+        type=Path,
+        help="Directory root to recursively scan for results_summary-shaped JSON files.",
     )
     parser.add_argument(
         "-o",
@@ -404,9 +466,14 @@ def parse_args() -> argparse.Namespace:
         help="Output merged JSON path.",
     )
     parser.add_argument(
+        "--scan-run-dirs",
+        action="store_true",
+        help="Scan sibling run_*/logs directories for missing runs. Disabled by default.",
+    )
+    parser.add_argument(
         "--no-scan-run-dirs",
         action="store_true",
-        help="Disable scanning sibling run_*/logs directories for missing runs.",
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--run-root",
@@ -419,9 +486,10 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    input_paths = collect_input_paths(args.inputs, args.input_dir, args.output)
     merged = merge_summaries(
-        args.inputs,
-        scan_run_dirs=not args.no_scan_run_dirs,
+        input_paths,
+        scan_run_dirs=args.scan_run_dirs and not args.no_scan_run_dirs,
         run_roots=args.run_root,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -433,8 +501,10 @@ def main() -> None:
     print(f"Wrote {args.output}")
     print(
         "runs={total_runs}, successful={successful_runs}, failed={failed_runs}, "
-        "skipped_without_data={skipped_runs_without_data}, duplicates={deduplicated_parameter_runs}, "
+        "input_files={input_files}, skipped_without_data={skipped_runs_without_data}, "
+        "duplicates={deduplicated_parameter_runs}, "
         "reconstructed_from_logs={reconstructed_runs_from_logs}".format(
+            input_files=len(input_paths),
             **aggregate
         )
     )

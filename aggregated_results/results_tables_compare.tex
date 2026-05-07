@@ -40,6 +40,36 @@ RepNoise & Model & meta-llama/Llama-2-7b-hf \\
  & Scheduler & constant \\
  & Safety eval datasets & beavertails, advbench \\
  & Utility eval tasks & sst2, gsm8k \\
+Antidote & Model & meta-llama/Llama-2-7b-hf \\
+ & Attack data mix & harmful: PKU-Alignment/BeaverTails\_dangerous; benign: sst2 (data/sst2.json) \\
+ & Sample size & 5000 \\
+ & Test size & 1000 \\
+ & Harmful ratios & 1\%, 10\% \\
+ & Learning rates & 0.00001, 0.0001 \\
+ & Epochs & 5, 10 \\
+ & Train batch size & 5 \\
+ & Eval batch size & 5 \\
+ & Grad accum. steps & 1 \\
+ & Weight decay & 0.1 \\
+ & Warmup ratio & 0.1 \\
+ & Scheduler & constant \\
+ & Safety eval datasets & beavertails, advbench \\
+ & Utility eval tasks & sst2, gsm8k \\
+Vaccine & Model & /root/project/Vaccine/cache/models--meta-llama--Llama-2-7b-hf/snapshots/01c7f73d771dfac7d292323805ebc428287df4f9 \\
+ & Attack data mix & harmful: PKU-Alignment/BeaverTails\_dangerous; benign: sst2 (data/sst2.json) \\
+ & Sample size & 5000 \\
+ & Test size & -- \\
+ & Harmful ratios & 1\%, 5\%, 10\% \\
+ & Learning rates & 0.00001, 0.00005, 0.0001 \\
+ & Epochs & 5, 10, 20 \\
+ & Train batch size & -- \\
+ & Eval batch size & -- \\
+ & Grad accum. steps & -- \\
+ & Weight decay & -- \\
+ & Warmup ratio & -- \\
+ & Scheduler & -- \\
+ & Safety eval datasets & -- \\
+ & Utility eval tasks & sst2 \\
 \bottomrule
 \end{tabular}
 }
@@ -56,12 +86,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 59.7 & 60.8 & 38.1 \\
  & RepNoise & 49.1 & 50.8 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 59 & 56.3 & 63.6 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 61 & 58 & 54 \\
  & RepNoise & 46.3 & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -78,12 +114,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 70.1 & 62.1 & 52.8 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 63.3 & 60.3 & 58.4 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 62.5 & 62.4 & 56.5 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -100,12 +142,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 70 & 65 & 41.9 \\
  & RepNoise & 53.7 & 54.9 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 63.3 & 43.2 & 38.4 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 56.3 & 50.8 & 53.6 \\
  & RepNoise & 67.8 & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -122,12 +170,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 4.6 & 4.9 & 4.3 \\
  & RepNoise & 4.9 & 5 & 4.1 \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 5.3 & 4.3 & 3.7 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 4.2 & 3.6 & 3.7 \\
  & RepNoise & 4.7 & 4.4 & 4.8 \\
+ & Antidote & 5.2 & 5.2 & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -144,12 +198,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 5.3 & 5.5 & 5.5 \\
  & RepNoise & 5.1 & 4.7 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 5.6 & 5.3 & 3.6 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 5.4 & 4.5 & 4.1 \\
  & RepNoise & 5 & 4.7 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -166,12 +226,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 5.4 & 4.6 & 4.5 \\
  & RepNoise & 4.2 & 4.6 & 4.5 \\
+ & Antidote & 5.2 & 5.2 & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 5.1 & 4.5 & 3.2 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 6 & 4.2 & 3.3 \\
  & RepNoise & 4.7 & 3.6 & 3.3 \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -188,12 +254,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 95.53 & 96.1 & 94.15 \\
  & RepNoise & 95.64 & 95.99 & 95.64 \\
+ & Antidote & 0 & -- & -- \\
+ & Vaccine & 67.4 & 79.2 & 81.8 \\
 \addlinespace
 0.00005 & SFT & 94.61 & 95.76 & 95.41 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & 82 & 84.2 & 83.8 \\
 \addlinespace
 0.0001 & SFT & 95.07 & 95.87 & 95.41 \\
  & RepNoise & 95.53 & 95.3 & 96.1 \\
+ & Antidote & 0 & 0 & -- \\
+ & Vaccine & 84.2 & 83.4 & 84.6 \\
 \bottomrule
 \end{tabular}
 }
@@ -210,12 +282,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 95.41 & 95.3 & 95.18 \\
  & RepNoise & 95.3 & 96.1 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & 66.4 & 77.6 & 81.4 \\
 \addlinespace
 0.00005 & SFT & 95.64 & 94.61 & 94.15 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & 80.8 & 83.8 & 84.8 \\
 \addlinespace
 0.0001 & SFT & 95.41 & 94.84 & 94.5 \\
  & RepNoise & 95.53 & 95.3 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & 83.6 & 85.4 & 85.6 \\
 \bottomrule
 \end{tabular}
 }
@@ -232,12 +310,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 95.18 & 95.99 & 94.5 \\
  & RepNoise & 94.38 & 95.87 & 95.53 \\
+ & Antidote & 0 & 0 & -- \\
+ & Vaccine & 64.2 & 77.8 & 80.2 \\
 \addlinespace
 0.00005 & SFT & 94.95 & 95.07 & 94.72 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & 82.6 & 84.2 & 85 \\
 \addlinespace
 0.0001 & SFT & 94.84 & 91.17 & 91.51 \\
  & RepNoise & 95.64 & 94.84 & 95.76 \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & 84 & 85.4 & 85.6 \\
 \bottomrule
 \end{tabular}
 }
@@ -254,12 +338,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 60.38 & 70.96 & 79.04 \\
  & RepNoise & 63.46 & 70.19 & 73.27 \\
+ & Antidote & 55.58 & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 78.27 & 70.38 & 71.73 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 74.81 & 73.08 & 70 \\
  & RepNoise & 66.73 & 66.35 & 64.81 \\
+ & Antidote & 55.38 & 55.19 & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -276,12 +366,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 76.35 & 83.65 & 87.88 \\
  & RepNoise & 76.54 & 84.42 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 88.08 & 83.46 & 79.81 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 86.15 & 85 & 81.35 \\
  & RepNoise & 85.38 & 87.12 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -298,12 +394,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 83.85 & 88.27 & 88.46 \\
  & RepNoise & 87.69 & 85.77 & 86.92 \\
+ & Antidote & 55.19 & 55.38 & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 86.54 & 82.69 & 87.88 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 84.62 & 85 & 84.81 \\
  & RepNoise & 85.58 & 82.88 & 85.38 \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -320,12 +422,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 54.6 & 62.1 & 68.7 \\
  & RepNoise & 56 & 61.2 & 67.8 \\
+ & Antidote & 54.3 & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 67.6 & 68.3 & 71.2 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 70.9 & 69.7 & 70 \\
  & RepNoise & 65.4 & 64.3 & 67.1 \\
+ & Antidote & 54.2 & 54.4 & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -342,12 +450,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 66.5 & 74.1 & 74.6 \\
  & RepNoise & 66.9 & 75.6 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 76 & 75.7 & 76.9 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 77.1 & 76.9 & 77.1 \\
  & RepNoise & 77.7 & 80 & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -364,12 +478,18 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 0.00001 & SFT & 72.6 & 76.8 & 77.8 \\
  & RepNoise & 76.8 & 78.9 & 78.3 \\
+ & Antidote & 54.4 & 54.3 & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.00005 & SFT & 77.2 & 78.9 & 79.4 \\
  & RepNoise & -- & -- & -- \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \addlinespace
 0.0001 & SFT & 76.4 & 77.6 & 79 \\
  & RepNoise & 78.1 & 79.5 & 79 \\
+ & Antidote & -- & -- & -- \\
+ & Vaccine & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 }

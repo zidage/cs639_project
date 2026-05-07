@@ -32,22 +32,28 @@ python aggregated_results\merge_results_summaries.py `
 The merge behavior is:
 
 - Runs with no numeric metric values are skipped.
-- Runs are deduplicated by `(learning_rate, epochs, harmful_ratio)`.
+- Runs are deduplicated by `(learning_rate, epochs, harmful_ratio)` for legacy grid summaries.
+- Antidote re-evaluation summaries are deduplicated by `checkpoint`.
 - If duplicate parameter combinations exist, the run with more numeric metrics is preferred.
 - The output `aggregate` block is recomputed.
-- By default, the script scans sibling `run_*/logs` folders and reconstructs runs missing from the JSON.
+- By default, the script only reads result summary JSON files.
 
 Useful options:
 
 ```powershell
-# Disable log-folder reconstruction.
-python aggregated_results\merge_results_summaries.py input.json -o merged.json --no-scan-run-dirs
+# Recursively scan a folder for JSON files shaped like results_summary files.
+python aggregated_results\merge_results_summaries.py `
+  --input-dir repnoise\antidote_res_intermediate `
+  -o aggregated_results\results_summary_merged_antidote.json
 
-# Explicitly specify one or more directories that contain run_* folders.
-python aggregated_results\merge_results_summaries.py input.json -o merged.json --run-root path\to\experiment_root
+# Enable log-folder reconstruction for old grid experiments.
+python aggregated_results\merge_results_summaries.py input.json -o merged.json --scan-run-dirs
+
+# Explicitly specify one or more directories that contain run_* folders when log scanning is enabled.
+python aggregated_results\merge_results_summaries.py input.json -o merged.json --scan-run-dirs --run-root path\to\experiment_root
 ```
 
-For log reconstruction, run folders must be named like:
+For legacy grid log reconstruction, run folders must be named like:
 
 ```text
 run_003_lr1e-05_ep5_ratio0.05
@@ -86,6 +92,7 @@ The table generator creates:
 - Rows grouped as `Learning rate | Method | Epoch ...`.
 - Missing values as `--`.
 - No bolding of best results.
+- Antidote checkpoint-only summaries are supported when checkpoint names encode `r..._lr..._ep...`; when both `attack_mixed` and `antidote_mixed` checkpoints exist, only `antidote_mixed` is rendered by default because it is the post-defense result.
 
 Useful option:
 
@@ -93,11 +100,22 @@ Useful option:
 python aggregated_results\generate_latex_tables.py --summary SFT=merged.json -o tables.tex --decimals 1
 ```
 
+To also show the pre-defense harmful fine-tuned checkpoint from Antidote summaries:
+
+```powershell
+python aggregated_results\generate_latex_tables.py `
+  --summary Antidote=aggregated_results\results_summary_merged_antidote.json `
+  -o aggregated_results\results_tables_antidote_with_attack_baseline.tex `
+  --include-antidote-attack-baseline
+```
+
 The LaTeX output requires:
 
 ```latex
 \usepackage{booktabs}
 ```
+
+The table snapshot can be found in <https://prism.openai.com/?u=3080d06e-7239-4906-bec5-d24f104d1033&pg=1&m=main.tex&d=7>
 
 ## Required JSON Schema
 
@@ -173,10 +191,11 @@ Minimum required fields:
 
 - Top level: `runs`.
 - Per run: `metrics` with at least one numeric value.
-- Per run parameters: either `variable_hyperparameters` or `resolved_parameters` must contain:
+- Per run parameters for legacy grid summaries: either `variable_hyperparameters` or `resolved_parameters` must contain:
   - `learning_rate`
   - `epochs`
   - `harmful_ratio`
+- Per run parameters for Antidote re-evaluation summaries: `variable_hyperparameters.checkpoint` is enough.
 
 Recommended fields for complete LaTeX settings tables:
 
@@ -200,4 +219,3 @@ Metric conventions:
 - `utility_scores_percent` values are treated as utility/evaluation scores.
 - `harmful_scores_percent_by_dataset` values are treated as harmful-rate/safety scores.
 - Metric values should be numbers or `null`. Missing or `null` values are rendered as `--` in LaTeX.
-
