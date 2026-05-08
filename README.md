@@ -167,21 +167,6 @@ Higher utility is better.
 
 ---
 
-# ⚠️ Notable Failure Case
-
-One configuration:
-- poison ratio: 5%
-- learning rate: 1e-4
-- epoch: 10
-
-produced malformed and unstable generations.
-
-In this setting, Antidote struggled to fully recover alignment because the underlying generation distribution itself became corrupted.
-
-This suggests Antidote performs best when the attacked model remains sufficiently coherent.
-
----
-
 # 👥 Team Members
 
 - Neil Pendyala
