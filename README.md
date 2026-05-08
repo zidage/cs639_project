@@ -38,7 +38,6 @@ main/
 ├── README.md
 ├── report/
 ├── presentation/
-├── shared_utils/
 
 Branches:
 ├── antidote
@@ -55,7 +54,6 @@ Contains:
 - overall project overview
 - report
 - presentation
-- shared documentation
 
 ## `antidote`
 Contains:
