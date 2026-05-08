@@ -1,0 +1,17 @@
+method,metric,poison_ratio,learning_rate,epochs,value
+RepNoise,sst2,0.01,1e-5,5,95.64
+RepNoise,sst2,0.01,1e-5,10,95.99
+RepNoise,sst2,0.01,1e-5,20,95.64
+RepNoise,sst2,0.01,1e-4,5,95.53
+RepNoise,sst2,0.01,1e-4,10,95.3
+RepNoise,sst2,0.01,1e-4,20,96.1
+RepNoise,sst2,0.05,1e-5,5,95.3
+RepNoise,sst2,0.05,1e-5,10,96.1
+RepNoise,sst2,0.05,1e-4,5,95.53
+RepNoise,sst2,0.05,1e-4,10,95.3
+RepNoise,sst2,0.1,1e-5,5,94.38
+RepNoise,sst2,0.1,1e-5,10,95.87
+RepNoise,sst2,0.1,1e-5,20,95.53
+RepNoise,sst2,0.1,1e-4,5,95.64
+RepNoise,sst2,0.1,1e-4,10,94.84
+RepNoise,sst2,0.1,1e-4,20,95.76

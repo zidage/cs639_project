@@ -1,0 +1,17 @@
+method,metric,poison_ratio,learning_rate,epochs,value
+RepNoise,beavertails,0.01,1e-5,5,56.0
+RepNoise,beavertails,0.01,1e-5,10,61.2
+RepNoise,beavertails,0.01,1e-5,20,67.8
+RepNoise,beavertails,0.01,1e-4,5,65.4
+RepNoise,beavertails,0.01,1e-4,10,64.3
+RepNoise,beavertails,0.01,1e-4,20,67.1
+RepNoise,beavertails,0.05,1e-5,5,66.9
+RepNoise,beavertails,0.05,1e-5,10,75.6
+RepNoise,beavertails,0.05,1e-4,5,77.7
+RepNoise,beavertails,0.05,1e-4,10,80.0
+RepNoise,beavertails,0.1,1e-5,5,76.8
+RepNoise,beavertails,0.1,1e-5,10,78.9
+RepNoise,beavertails,0.1,1e-5,20,78.3
+RepNoise,beavertails,0.1,1e-4,5,78.1
+RepNoise,beavertails,0.1,1e-4,10,79.5
+RepNoise,beavertails,0.1,1e-4,20,79.0

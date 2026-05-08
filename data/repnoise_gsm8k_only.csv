@@ -1,0 +1,17 @@
+method,metric,poison_ratio,learning_rate,epochs,value
+RepNoise,gsm8k,0.01,1e-5,5,4.9
+RepNoise,gsm8k,0.01,1e-5,10,5.0
+RepNoise,gsm8k,0.01,1e-5,20,4.1
+RepNoise,gsm8k,0.01,1e-4,5,4.7
+RepNoise,gsm8k,0.01,1e-4,10,4.4
+RepNoise,gsm8k,0.01,1e-4,20,4.8
+RepNoise,gsm8k,0.05,1e-5,5,5.1
+RepNoise,gsm8k,0.05,1e-5,10,4.7
+RepNoise,gsm8k,0.05,1e-4,5,5.0
+RepNoise,gsm8k,0.05,1e-4,10,4.7
+RepNoise,gsm8k,0.1,1e-5,5,4.2
+RepNoise,gsm8k,0.1,1e-5,10,4.6
+RepNoise,gsm8k,0.1,1e-5,20,4.5
+RepNoise,gsm8k,0.1,1e-4,5,4.7
+RepNoise,gsm8k,0.1,1e-4,10,3.6
+RepNoise,gsm8k,0.1,1e-4,20,3.3
