@@ -6,6 +6,7 @@ This directory contains scripts for collecting experiment result JSON files and 
 - `convert_flat_results_summary.py`: converts flat per-benchmark result lists, such as Vaccine outputs, into merged `results_summary` format.
 - `convert_antidote_remaining.py`: converts remaining Antidote beavertails-only outputs and merges them into the Antidote summary.
 - `convert_antidote_sst2.py`: converts Antidote SST-2 prediction outputs and merges them into the Antidote summary.
+- `antidote_sst2_moderated/moderate_antidote_sst2.py`: re-scores Antidote SST-2 free-form outputs with DeepSeek when outputs are not exact `positive` / `negative` labels.
 - `generate_latex_tables.py`: reads one or more merged summaries and generates LaTeX result tables.
 
 The scripts use only the Python standard library.
@@ -118,7 +119,43 @@ python aggregated_results\convert_antidote_sst2.py `
 
 The converter computes `sst2` accuracy from the `correct` field, writes an SST-2-only summary, then merges it into the existing Antidote summary by checkpoint. Only `antidote_mixed_*` checkpoints are kept; `attack_mixed_*` and non-grid debug files are skipped.
 
-## 5. Generate LaTeX Tables
+## 5. Moderate Antidote SST-2 Free-Form Outputs
+
+Use `antidote_sst2_moderated/moderate_antidote_sst2.py` when Antidote SST-2
+outputs contain full-sentence answers instead of exact `positive` / `negative`
+labels.
+
+First put the DeepSeek API key in:
+
+```text
+aggregated_results/antidote_sst2_moderated/.env
+```
+
+with:
+
+```text
+DEEPSEEK_API_KEY=sk-...
+```
+
+Then run:
+
+```powershell
+python aggregated_results\antidote_sst2_moderated\moderate_antidote_sst2.py
+```
+
+The script writes moderated per-example outputs, a reusable moderation cache,
+`results_summary_antidote_sst2_moderated.json`, and
+`results_summary_merged_antidote_moderated.json` under
+`aggregated_results/antidote_sst2_moderated`. The summary keeps the original
+Antidote run parameters and writes the method as `antidote_moderated`.
+
+Useful preflight:
+
+```powershell
+python aggregated_results\antidote_sst2_moderated\moderate_antidote_sst2.py --dry-run
+```
+
+## 6. Generate LaTeX Tables
 
 Use `generate_latex_tables.py` after producing merged summaries.
 

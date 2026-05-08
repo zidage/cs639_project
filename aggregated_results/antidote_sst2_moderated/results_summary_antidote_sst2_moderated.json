@@ -1,0 +1,612 @@
+{
+  "meta": {
+    "created_at": "2026-05-05T17:53:35",
+    "project_root": "/home/fabien/cs639gpu/Antidote",
+    "experiment_root": "/home/fabien/cs639gpu/Antidote/experiments/reval_grid/20260505_175335",
+    "model_path": "meta-llama/Llama-2-7b-hf",
+    "python_bin": "/home/fabien/cs639gpu/venv3108/bin/python",
+    "json_schema_version": "antidote_sst2_moderated_v1",
+    "merged_at": "2026-05-07T22:39:58",
+    "merged_from": [
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e4_ep10_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e4_ep5_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e5_ep10_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e5_ep5_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r010_lr1e4_ep20_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r010_lr1e4_ep5_dr02_sn2000.json"
+    ],
+    "method": "antidote_moderated",
+    "moderator_model": "deepseek-v4-flash"
+  },
+  "attack_config": {
+    "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+    "base_lora_folder": "ckpt/Llama-2-7b-hf_sft_paper",
+    "benign_task": "sst2",
+    "benign_dataset_path": "data/sst2.json"
+  },
+  "evaluation_config": {
+    "safety_eval_datasets": [
+      "advbench",
+      "beavertails"
+    ],
+    "advbench_instruction": {
+      "status": "ready",
+      "source": "existing_file",
+      "path": "/home/fabien/cs639gpu/Antidote/data/advbench_eval_instructions.json",
+      "num_prompts": 520
+    },
+    "hf_token_config": {
+      "token_file": "/home/fabien/cs639gpu/Antidote/huggingface_token.txt",
+      "token_source": "file",
+      "token_loaded": true,
+      "status": "loaded"
+    },
+    "utility_eval_tasks": [
+      "sst2"
+    ]
+  },
+  "defaults": {
+    "sample_num": 5000,
+    "train_batch_size": 5,
+    "eval_batch_size": 5,
+    "grad_acc_steps": 1,
+    "save_steps": 100000,
+    "eval_steps": 2000,
+    "weight_decay": 0.1,
+    "warmup_ratio": 0.1,
+    "scheduler": "constant",
+    "logging_steps": 10,
+    "cache_dir": "cache",
+    "num_test_data": 1000,
+    "gpu_id": "0,1,2,3,4",
+    "max_memory_per_gpu": "",
+    "cpu_offload_gib": 0,
+    "use_gradient_checkpointing": false,
+    "build_data_if_missing": true,
+    "delete_run_checkpoint": false,
+    "force_no_weights_only_load": true,
+    "hf_token_file": "huggingface_token.txt",
+    "continue_on_error": false,
+    "echo_mode": "key",
+    "dry_run": false,
+    "start_iteration": 1,
+    "planned_runs_from_start": 2
+  },
+  "data_prep": {
+    "required_tasks": [
+      "gsm8k",
+      "sst2"
+    ],
+    "built": [],
+    "already_present": [
+      "/home/fabien/cs639gpu/Antidote/data/gsm8k.json",
+      "/home/fabien/cs639gpu/Antidote/data/sst2.json"
+    ],
+    "missing": []
+  },
+  "runs": [
+    {
+      "run_id": "sst2_moderated_001_AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep10_dr02_sn2000",
+      "index": 1,
+      "method": "antidote_moderated",
+      "status": "success",
+      "duration_sec": "",
+      "variable_hyperparameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep10_dr02_sn2000"
+      },
+      "resolved_parameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep10_dr02_sn2000",
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_sft_paper",
+        "gpu_id": "0,1,2,3,4",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": false,
+        "method": "antidote_moderated",
+        "learning_rate": 0.0001,
+        "epochs": 10,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {},
+        "utility_evaluation_tasks": [
+          "sst2"
+        ]
+      },
+      "output_paths": {
+        "safety_pred_outputs": {},
+        "safety_eval_jsons": {},
+        "utility_outputs": {
+          "sst2": "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e4_ep10_dr02_sn2000.json"
+        },
+        "run_log_dir": ""
+      },
+      "cleanup": {
+        "delete_run_checkpoint": false,
+        "checkpoint_dir": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep10_dr02_sn2000",
+        "checkpoint_exists_before_cleanup": "",
+        "checkpoint_size_bytes_before_delete": "",
+        "checkpoint_size_gb_before_delete": "",
+        "checkpoint_deleted": "",
+        "checkpoint_cleanup_status": "",
+        "checkpoint_cleanup_error": ""
+      },
+      "steps": [],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {},
+        "harmful_score_percent": "",
+        "utility_scores_percent": {
+          "sst2": 95.3
+        },
+        "moderation": {
+          "method": "antidote_moderated",
+          "moderator_model": "deepseek-v4-flash",
+          "scored_count": 872,
+          "correct_count": 831,
+          "unknown_count": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "sst2_moderated_002_AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep5_dr02_sn2000",
+      "index": 2,
+      "method": "antidote_moderated",
+      "status": "success",
+      "duration_sec": "",
+      "variable_hyperparameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep5_dr02_sn2000"
+      },
+      "resolved_parameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep5_dr02_sn2000",
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_sft_paper",
+        "gpu_id": "0,1,2,3,4",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": false,
+        "method": "antidote_moderated",
+        "learning_rate": 0.0001,
+        "epochs": 5,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {},
+        "utility_evaluation_tasks": [
+          "sst2"
+        ]
+      },
+      "output_paths": {
+        "safety_pred_outputs": {},
+        "safety_eval_jsons": {},
+        "utility_outputs": {
+          "sst2": "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e4_ep5_dr02_sn2000.json"
+        },
+        "run_log_dir": ""
+      },
+      "cleanup": {
+        "delete_run_checkpoint": false,
+        "checkpoint_dir": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep5_dr02_sn2000",
+        "checkpoint_exists_before_cleanup": "",
+        "checkpoint_size_bytes_before_delete": "",
+        "checkpoint_size_gb_before_delete": "",
+        "checkpoint_deleted": "",
+        "checkpoint_cleanup_status": "",
+        "checkpoint_cleanup_error": ""
+      },
+      "steps": [],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {},
+        "harmful_score_percent": "",
+        "utility_scores_percent": {
+          "sst2": 95.07
+        },
+        "moderation": {
+          "method": "antidote_moderated",
+          "moderator_model": "deepseek-v4-flash",
+          "scored_count": 872,
+          "correct_count": 829,
+          "unknown_count": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "sst2_moderated_003_AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e5_ep10_dr02_sn2000",
+      "index": 3,
+      "method": "antidote_moderated",
+      "status": "success",
+      "duration_sec": "",
+      "variable_hyperparameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e5_ep10_dr02_sn2000"
+      },
+      "resolved_parameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e5_ep10_dr02_sn2000",
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_sft_paper",
+        "gpu_id": "0,1,2,3,4",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": false,
+        "method": "antidote_moderated",
+        "learning_rate": 1e-05,
+        "epochs": 10,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {},
+        "utility_evaluation_tasks": [
+          "sst2"
+        ]
+      },
+      "output_paths": {
+        "safety_pred_outputs": {},
+        "safety_eval_jsons": {},
+        "utility_outputs": {
+          "sst2": "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e5_ep10_dr02_sn2000.json"
+        },
+        "run_log_dir": ""
+      },
+      "cleanup": {
+        "delete_run_checkpoint": false,
+        "checkpoint_dir": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e5_ep10_dr02_sn2000",
+        "checkpoint_exists_before_cleanup": "",
+        "checkpoint_size_bytes_before_delete": "",
+        "checkpoint_size_gb_before_delete": "",
+        "checkpoint_deleted": "",
+        "checkpoint_cleanup_status": "",
+        "checkpoint_cleanup_error": ""
+      },
+      "steps": [],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {},
+        "harmful_score_percent": "",
+        "utility_scores_percent": {
+          "sst2": 95.07
+        },
+        "moderation": {
+          "method": "antidote_moderated",
+          "moderator_model": "deepseek-v4-flash",
+          "scored_count": 872,
+          "correct_count": 829,
+          "unknown_count": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "sst2_moderated_004_AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e5_ep5_dr02_sn2000",
+      "index": 4,
+      "method": "antidote_moderated",
+      "status": "success",
+      "duration_sec": "",
+      "variable_hyperparameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e5_ep5_dr02_sn2000"
+      },
+      "resolved_parameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e5_ep5_dr02_sn2000",
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_sft_paper",
+        "gpu_id": "0,1,2,3,4",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": false,
+        "method": "antidote_moderated",
+        "learning_rate": 1e-05,
+        "epochs": 5,
+        "harmful_ratio": 0.05,
+        "harmful_ratio_percent": 5.0
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {},
+        "utility_evaluation_tasks": [
+          "sst2"
+        ]
+      },
+      "output_paths": {
+        "safety_pred_outputs": {},
+        "safety_eval_jsons": {},
+        "utility_outputs": {
+          "sst2": "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e5_ep5_dr02_sn2000.json"
+        },
+        "run_log_dir": ""
+      },
+      "cleanup": {
+        "delete_run_checkpoint": false,
+        "checkpoint_dir": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e5_ep5_dr02_sn2000",
+        "checkpoint_exists_before_cleanup": "",
+        "checkpoint_size_bytes_before_delete": "",
+        "checkpoint_size_gb_before_delete": "",
+        "checkpoint_deleted": "",
+        "checkpoint_cleanup_status": "",
+        "checkpoint_cleanup_error": ""
+      },
+      "steps": [],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {},
+        "harmful_score_percent": "",
+        "utility_scores_percent": {
+          "sst2": 94.95
+        },
+        "moderation": {
+          "method": "antidote_moderated",
+          "moderator_model": "deepseek-v4-flash",
+          "scored_count": 872,
+          "correct_count": 828,
+          "unknown_count": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "sst2_moderated_005_AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e4_ep20_dr02_sn2000",
+      "index": 5,
+      "method": "antidote_moderated",
+      "status": "success",
+      "duration_sec": "",
+      "variable_hyperparameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e4_ep20_dr02_sn2000"
+      },
+      "resolved_parameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e4_ep20_dr02_sn2000",
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_sft_paper",
+        "gpu_id": "0,1,2,3,4",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": false,
+        "method": "antidote_moderated",
+        "learning_rate": 0.0001,
+        "epochs": 20,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {},
+        "utility_evaluation_tasks": [
+          "sst2"
+        ]
+      },
+      "output_paths": {
+        "safety_pred_outputs": {},
+        "safety_eval_jsons": {},
+        "utility_outputs": {
+          "sst2": "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r010_lr1e4_ep20_dr02_sn2000.json"
+        },
+        "run_log_dir": ""
+      },
+      "cleanup": {
+        "delete_run_checkpoint": false,
+        "checkpoint_dir": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e4_ep20_dr02_sn2000",
+        "checkpoint_exists_before_cleanup": "",
+        "checkpoint_size_bytes_before_delete": "",
+        "checkpoint_size_gb_before_delete": "",
+        "checkpoint_deleted": "",
+        "checkpoint_cleanup_status": "",
+        "checkpoint_cleanup_error": ""
+      },
+      "steps": [],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {},
+        "harmful_score_percent": "",
+        "utility_scores_percent": {
+          "sst2": 95.18
+        },
+        "moderation": {
+          "method": "antidote_moderated",
+          "moderator_model": "deepseek-v4-flash",
+          "scored_count": 872,
+          "correct_count": 830,
+          "unknown_count": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "run_id": "sst2_moderated_006_AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e4_ep5_dr02_sn2000",
+      "index": 6,
+      "method": "antidote_moderated",
+      "status": "success",
+      "duration_sec": "",
+      "variable_hyperparameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e4_ep5_dr02_sn2000"
+      },
+      "resolved_parameters": {
+        "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e4_ep5_dr02_sn2000",
+        "sample_num": 5000,
+        "attack_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_dataset": "data/sst2.json",
+        "benign_task": "sst2",
+        "train_batch_size": 5,
+        "eval_batch_size": 5,
+        "grad_acc_steps": 1,
+        "save_steps": 100000,
+        "eval_steps": 2000,
+        "weight_decay": 0.1,
+        "warmup_ratio": 0.1,
+        "scheduler": "constant",
+        "logging_steps": 10,
+        "cache_dir": "cache",
+        "num_test_data": 1000,
+        "model_path": "meta-llama/Llama-2-7b-hf",
+        "base_lora_folder": "ckpt/Llama-2-7b-hf_sft_paper",
+        "gpu_id": "0,1,2,3,4",
+        "max_memory_per_gpu": "",
+        "cpu_offload_gib": 0,
+        "use_gradient_checkpointing": false,
+        "force_no_weights_only_load": true,
+        "delete_run_checkpoint": false,
+        "method": "antidote_moderated",
+        "learning_rate": 0.0001,
+        "epochs": 5,
+        "harmful_ratio": 0.1,
+        "harmful_ratio_percent": 10.0
+      },
+      "datasets": {
+        "attack_training_dataset": "PKU-Alignment/BeaverTails_dangerous",
+        "benign_training_dataset": "data/sst2.json",
+        "safety_evaluation_datasets": {},
+        "utility_evaluation_tasks": [
+          "sst2"
+        ]
+      },
+      "output_paths": {
+        "safety_pred_outputs": {},
+        "safety_eval_jsons": {},
+        "utility_outputs": {
+          "sst2": "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r010_lr1e4_ep5_dr02_sn2000.json"
+        },
+        "run_log_dir": ""
+      },
+      "cleanup": {
+        "delete_run_checkpoint": false,
+        "checkpoint_dir": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r010_lr1e4_ep5_dr02_sn2000",
+        "checkpoint_exists_before_cleanup": "",
+        "checkpoint_size_bytes_before_delete": "",
+        "checkpoint_size_gb_before_delete": "",
+        "checkpoint_deleted": "",
+        "checkpoint_cleanup_status": "",
+        "checkpoint_cleanup_error": ""
+      },
+      "steps": [],
+      "metrics": {
+        "harmful_scores_percent_by_dataset": {},
+        "harmful_score_percent": "",
+        "utility_scores_percent": {
+          "sst2": 94.95
+        },
+        "moderation": {
+          "method": "antidote_moderated",
+          "moderator_model": "deepseek-v4-flash",
+          "scored_count": 872,
+          "correct_count": 828,
+          "unknown_count": 0
+        }
+      },
+      "errors": []
+    }
+  ],
+  "aggregate": {
+    "total_runs": 6,
+    "successful_runs": 6,
+    "failed_runs": 0,
+    "skipped_runs_without_data": 0,
+    "deduplicated_parameter_runs": 0,
+    "source_files": [
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e4_ep10_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e4_ep5_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e5_ep10_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r005_lr1e5_ep5_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r010_lr1e4_ep20_dr02_sn2000.json",
+      "D:\\Courses\\cs_courses\\CS_639\\cs639_project\\aggregated_results\\antidote_sst2_moderated\\rows\\antidote_mixed_r010_lr1e4_ep5_dr02_sn2000.json"
+    ],
+    "best_harmful_runs": {},
+    "best_utility_runs": {
+      "sst2": {
+        "run_id": "sst2_moderated_001_AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep10_dr02_sn2000",
+        "sst2_percent": 95.3,
+        "variable_hyperparameters": {
+          "checkpoint": "AntidoteBackup/ckpt/beavertails/antidote_mixed_r005_lr1e4_ep10_dr02_sn2000"
+        }
+      }
+    }
+  }
+}
