@@ -1,0 +1,7 @@
+.DS_Store
+__pycache__/
+*.pyc
+
+# Route 3 midterm artifact safety/size exclusions
+experiments/route3_repnoise_midterm/artifacts/**/huggingface_token.txt
+experiments/route3_repnoise_midterm/artifacts/**/adapter_model.bin
