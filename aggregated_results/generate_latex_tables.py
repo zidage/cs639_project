@@ -371,6 +371,20 @@ def label_number(value: str) -> str:
     return format(decimal, "g")
 
 
+def label_learning_rate(value: str) -> str:
+    try:
+        decimal = Decimal(value).normalize()
+    except InvalidOperation:
+        return latex_escape(value)
+
+    if decimal == 0 or abs(decimal) >= 1:
+        return label_number(value)
+
+    exponent = decimal.adjusted()
+    mantissa = decimal.scaleb(-exponent).normalize()
+    return f"{format_decimal_plain(mantissa)}e{exponent}"
+
+
 def format_decimal_plain(decimal: Decimal) -> str:
     text = format(decimal, "f")
     if "." in text:
@@ -474,7 +488,7 @@ def render_settings_table(methods: list[MethodResults]) -> str:
                     "Harmful ratios",
                     latex_value([ratio_caption_text(value) for value in method_grid_values(method, 2)]),
                 ),
-                (method.name, "Learning rates", latex_value([label_number(value) for value in method_grid_values(method, 0)])),
+                (method.name, "Learning rates", latex_value([label_learning_rate(value) for value in method_grid_values(method, 0)])),
                 (method.name, "Epochs", latex_value([label_number(value) for value in method_grid_values(method, 1)])),
                 (method.name, "Train batch size", latex_value(resolved_or_default(method, "train_batch_size"))),
                 (method.name, "Eval batch size", latex_value(resolved_or_default(method, "eval_batch_size"))),
@@ -542,7 +556,7 @@ def render_table(
 
     for lr_index, learning_rate in enumerate(learning_rates):
         for method_index, method in enumerate(methods):
-            row = [label_number(learning_rate) if method_index == 0 else "", latex_escape(method.name)]
+            row = [label_learning_rate(learning_rate) if method_index == 0 else "", latex_escape(method.name)]
             for epoch in epochs:
                 row.append(render_value(method, metric, (learning_rate, epoch, harmful_ratio), decimals))
             lines.append(" & ".join(row) + r" \\")

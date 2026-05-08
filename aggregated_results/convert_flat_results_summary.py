@@ -20,6 +20,9 @@ from typing import Any
 
 EMPTY = ""
 GRID_KEYS = ("learning_rate", "epochs", "harmful_ratio")
+SAFETY_DATASET = "beavertails"
+SUCCESS_STATUSES = {"completed", "success"}
+PARTIAL_STATUSES = {"generation_completed", "running"}
 DEFAULT_KEYS = (
     "sample_num",
     "train_batch_size",
@@ -54,6 +57,8 @@ def load_json(path: Path) -> Any:
 
 def write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        path.chmod(path.stat().st_mode | 0o200)
     with path.open("w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
         f.write("\n")
@@ -106,9 +111,20 @@ def common_attack_data_mix(rows: list[dict[str, Any]]) -> tuple[Any, Any]:
 
 
 def status_value(value: Any) -> Any:
-    if value == "completed":
+    if value in SUCCESS_STATUSES:
         return "success"
     return value if nonempty(value) else EMPTY
+
+
+def status_rank(value: Any) -> int:
+    normalized = status_value(value)
+    if normalized == "success":
+        return 3
+    if value in PARTIAL_STATUSES:
+        return 2
+    if nonempty(value):
+        return 1
+    return 0
 
 
 def harmful_ratio_value(row: dict[str, Any]) -> Any:
@@ -147,14 +163,30 @@ def flat_utility_scores(row: dict[str, Any]) -> dict[str, float]:
     return scores
 
 
+def harmful_scores(row: dict[str, Any]) -> dict[str, float]:
+    score = row.get("harmful_score")
+    if not is_number(score):
+        return {}
+    return {SAFETY_DATASET: score}
+
+
 def output_paths(row: dict[str, Any]) -> dict[str, Any]:
     paths = {
-        "attack_lora_output_dir": value_or_empty(row, "attack_checkpoint"),
+        "sft_attack_lora_output_dir": value_or_empty(row, "attack_checkpoint"),
+        "safety_pred_outputs": {},
+        "safety_eval_jsons": {},
         "utility_outputs": {},
+        "run_log_dir": EMPTY,
     }
+    if nonempty(row.get("harmful_generation")):
+        paths["safety_pred_outputs"][SAFETY_DATASET] = row["harmful_generation"]
+    if nonempty(row.get("harmful_eval_output")):
+        paths["safety_eval_jsons"][SAFETY_DATASET] = row["harmful_eval_output"]
     for key, value in row.items():
         if key.endswith("_output") and nonempty(value):
             task = key[: -len("_output")]
+            if task in {"harmful", "harmful_eval"}:
+                continue
             paths["utility_outputs"][task] = value
     return paths
 
@@ -235,7 +267,7 @@ def build_run(row: dict[str, Any], index: int, utility_tasks: list[str]) -> dict
         "datasets": {
             "attack_training_dataset": attack_dataset,
             "benign_training_dataset": benign_dataset,
-            "safety_evaluation_datasets": {},
+            "safety_evaluation_datasets": {SAFETY_DATASET: EMPTY},
             "utility_evaluation_tasks": utility_tasks,
         },
         "output_paths": output_paths(row),
@@ -251,8 +283,8 @@ def build_run(row: dict[str, Any], index: int, utility_tasks: list[str]) -> dict
         },
         "steps": [],
         "metrics": {
-            "harmful_scores_percent_by_dataset": {},
-            "harmful_score_percent": EMPTY,
+            "harmful_scores_percent_by_dataset": harmful_scores(row),
+            "harmful_score_percent": row["harmful_score"] if is_number(row.get("harmful_score")) else EMPTY,
             "utility_scores_percent": flat_utility_scores(row),
         },
         "errors": [],
@@ -263,11 +295,18 @@ def merge_run(existing: dict[str, Any], row: dict[str, Any], utility_tasks: list
     metrics = existing.setdefault("metrics", {})
     utility_scores = metrics.setdefault("utility_scores_percent", {})
     utility_scores.update(flat_utility_scores(row))
+    harmful_by_dataset = metrics.setdefault("harmful_scores_percent_by_dataset", {})
+    harmful_by_dataset.update(harmful_scores(row))
+    if is_number(row.get("harmful_score")):
+        metrics["harmful_score_percent"] = row["harmful_score"]
 
     existing["datasets"]["utility_evaluation_tasks"] = utility_tasks
-    existing["output_paths"]["utility_outputs"].update(output_paths(row)["utility_outputs"])
+    row_output_paths = output_paths(row)
+    existing["output_paths"]["utility_outputs"].update(row_output_paths["utility_outputs"])
+    existing["output_paths"]["safety_pred_outputs"].update(row_output_paths["safety_pred_outputs"])
+    existing["output_paths"]["safety_eval_jsons"].update(row_output_paths["safety_eval_jsons"])
 
-    if not nonempty(existing["status"]):
+    if status_rank(row.get("status")) > status_rank(existing["status"]):
         existing["status"] = status_value(row.get("status"))
     if not nonempty(existing["duration_sec"]):
         existing["duration_sec"] = value_or_empty(row, "duration_sec")
@@ -288,7 +327,7 @@ def merge_run(existing: dict[str, Any], row: dict[str, Any], utility_tasks: list
 def collect_input_paths(paths: list[Path], input_dir: Path | None, glob_pattern: str) -> list[Path]:
     collected = list(paths)
     if input_dir is not None:
-        collected.extend(sorted(path for path in input_dir.glob(glob_pattern) if path.is_file()))
+        collected.extend(sorted(path for path in input_dir.rglob(glob_pattern) if path.is_file()))
     unique: OrderedDict[Path, None] = OrderedDict()
     for path in collected:
         unique[path] = None
@@ -322,13 +361,11 @@ def build_summary(rows_with_sources: list[tuple[Path, dict[str, Any]]], source_f
             merged_runs[key] = build_run(row, len(merged_runs) + 1, utility_tasks)
         else:
             merge_run(merged_runs[key], row, utility_tasks)
-        merged_runs[key].setdefault("source_files", [])
-        if str(source) not in merged_runs[key]["source_files"]:
-            merged_runs[key]["source_files"].append(str(source))
 
     runs = list(merged_runs.values())
     successful_runs = sum(1 for run in runs if run.get("status") == "success")
     failed_runs = sum(1 for run in runs if run.get("status") not in ("success", EMPTY))
+    best_harmful = best_harmful_runs(runs)
 
     return {
         "meta": {
@@ -348,7 +385,7 @@ def build_summary(rows_with_sources: list[tuple[Path, dict[str, Any]]], source_f
             "benign_dataset_path": benign_dataset,
         },
         "evaluation_config": {
-            "safety_eval_datasets": [],
+            "safety_eval_datasets": [SAFETY_DATASET] if any(harmful_scores(row) for row in rows) else [],
             "advbench_instruction": {},
             "hf_token_config": {},
             "utility_eval_tasks": utility_tasks,
@@ -368,11 +405,28 @@ def build_summary(rows_with_sources: list[tuple[Path, dict[str, Any]]], source_f
             "skipped_runs_without_data": 0,
             "deduplicated_parameter_runs": len(rows) - len(runs),
             "source_files": [str(path) for path in source_files],
-            "best_beavertails_run": {},
-            "best_harmful_runs": {},
+            "best_beavertails_run": best_harmful.get(SAFETY_DATASET, {}),
+            "best_harmful_runs": best_harmful,
             "best_utility_runs": best_utility_runs(runs),
         },
     }
+
+
+def best_harmful_runs(runs: list[dict[str, Any]]) -> dict[str, Any]:
+    best: dict[str, Any] = {}
+    for run in runs:
+        scores = (run.get("metrics") or {}).get("harmful_scores_percent_by_dataset") or {}
+        for dataset, value in scores.items():
+            if not is_number(value):
+                continue
+            current = best.get(dataset)
+            if current is None or value < current[f"{dataset}_percent"]:
+                best[dataset] = {
+                    "run_id": run.get("run_id", EMPTY),
+                    f"{dataset}_percent": value,
+                    "variable_hyperparameters": run.get("variable_hyperparameters", {}),
+                }
+    return best
 
 
 def best_utility_runs(runs: list[dict[str, Any]]) -> dict[str, Any]:
@@ -397,7 +451,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("paths", nargs="*", type=Path, help="Flat JSON file paths to convert.")
     parser.add_argument("--input-dir", type=Path, help="Directory containing flat JSON files.")
     parser.add_argument("--glob", default="*.json", help="Glob pattern used with --input-dir.")
-    parser.add_argument("-o", "--output", type=Path, required=True, help="Converted summary output path.")
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=Path,
+        default=Path("aggregated_results/results_summary_merged_vaccine.json"),
+        help="Converted summary output path.",
+    )
     return parser.parse_args()
 
 
