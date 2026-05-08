@@ -5,6 +5,7 @@ This directory contains scripts for collecting experiment result JSON files and 
 - `merge_results_summaries.py`: merges one or more `results_summary*.json` files into one deduplicated summary.
 - `convert_flat_results_summary.py`: converts flat per-benchmark result lists, such as Vaccine outputs, into merged `results_summary` format.
 - `convert_antidote_remaining.py`: converts remaining Antidote beavertails-only outputs and merges them into the Antidote summary.
+- `convert_antidote_sst2.py`: converts Antidote SST-2 prediction outputs and merges them into the Antidote summary.
 - `generate_latex_tables.py`: reads one or more merged summaries and generates LaTeX result tables.
 
 The scripts use only the Python standard library.
@@ -101,9 +102,23 @@ python aggregated_results\convert_antidote_remaining.py `
   -o aggregated_results\results_summary_merged_antidote.json
 ```
 
-The converter writes a remaining-only summary first, then merges it with the existing Antidote summary by checkpoint. Existing advbench and utility metrics are preserved; remaining beavertails scores and output paths are added.
+The converter writes a remaining-only summary first, then merges it with the existing Antidote summary by checkpoint. Only `antidote_mixed_*` checkpoints are kept; `attack_mixed_*` checkpoints are skipped because they are the SFT/attack baseline. Existing advbench and utility metrics are preserved; remaining beavertails scores and output paths are added.
 
-## 4. Generate LaTeX Tables
+## 4. Convert Antidote SST-2 Results
+
+Use `convert_antidote_sst2.py` when Antidote SST-2 outputs are one JSON file per checkpoint with per-example `correct` fields.
+
+```powershell
+python aggregated_results\convert_antidote_sst2.py `
+  --input-dir aggregated_results\antidote_sst2 `
+  --base-summary aggregated_results\results_summary_merged_antidote.json `
+  --sst2-output aggregated_results\results_summary_antidote_sst2.json `
+  -o aggregated_results\results_summary_merged_antidote.json
+```
+
+The converter computes `sst2` accuracy from the `correct` field, writes an SST-2-only summary, then merges it into the existing Antidote summary by checkpoint. Only `antidote_mixed_*` checkpoints are kept; `attack_mixed_*` and non-grid debug files are skipped.
+
+## 5. Generate LaTeX Tables
 
 Use `generate_latex_tables.py` after producing merged summaries.
 

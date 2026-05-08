@@ -54,7 +54,7 @@ Antidote & Model & meta-llama/Llama-2-7b-hf \\
  & Warmup ratio & 0.1 \\
  & Scheduler & constant \\
  & Safety eval datasets & advbench, beavertails \\
- & Utility eval tasks & sst2, gsm8k \\
+ & Utility eval tasks & gsm8k, sst2 \\
 Vaccine & Model & /root/project/Vaccine/cache/models--meta-llama--Llama-2-7b-hf/snapshots/01c7f73d771dfac7d292323805ebc428287df4f9 \\
  & Attack data mix & harmful: PKU-Alignment/BeaverTails\_dangerous; benign: sst2 (data/sst2.json) \\
  & Sample size & 5000 \\
@@ -282,7 +282,7 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 1e-5 & SFT & 95.41 & 95.3 & 95.18 \\
  & RepNoise & 95.3 & 96.1 & -- \\
- & Antidote & -- & -- & -- \\
+ & Antidote & 0 & 0 & -- \\
  & Vaccine & 66.4 & 77.6 & 81.4 \\
 \addlinespace
 5e-5 & SFT & 95.64 & 94.61 & 94.15 \\
@@ -292,7 +292,7 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \addlinespace
 1e-4 & SFT & 95.41 & 94.84 & 94.5 \\
  & RepNoise & 95.53 & 95.3 & -- \\
- & Antidote & -- & -- & -- \\
+ & Antidote & 0 & 0 & -- \\
  & Vaccine & 83.6 & 85.4 & 85.6 \\
 \bottomrule
 \end{tabular}
@@ -320,7 +320,7 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \addlinespace
 1e-4 & SFT & 94.84 & 91.17 & 91.51 \\
  & RepNoise & 95.64 & 94.84 & 95.76 \\
- & Antidote & -- & -- & -- \\
+ & Antidote & 0 & -- & 0 \\
  & Vaccine & 84 & 85.4 & 85.6 \\
 \bottomrule
 \end{tabular}

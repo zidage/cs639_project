@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""Convert Antidote remaining beavertails results and merge them into a summary.
-
-The remaining Antidote outputs are checkpoint directories containing
-pred_beavertails.json and pred_beavertails.json_sentiment_eval.json, plus
-optional summary_final/summary_partial maps. This script normalizes those
-results into the results_summary schema and can merge them into the existing
-Antidote merged summary by checkpoint.
-"""
+"""Convert Antidote SST-2 prediction outputs and merge them into a summary."""
 
 from __future__ import annotations
 
@@ -21,14 +14,13 @@ from typing import Any
 
 
 EMPTY = ""
-SAFETY_DATASET = "beavertails"
+UTILITY_TASK = "sst2"
 CHECKPOINT_RE = re.compile(
     r"(?P<variant>attack|antidote)_mixed_"
     r"r(?P<harmful_ratio>\d+)_"
     r"lr(?P<learning_rate>[^_]+)_"
     r"ep(?P<epochs>\d+)"
 )
-FINAL_SCORE_RE = re.compile(r"final\s+score\s*:\s*([-+]?\d+(?:\.\d+)?)", re.IGNORECASE)
 
 
 def load_json(path: Path) -> Any:
@@ -78,12 +70,6 @@ def parse_compact_decimal(value: str) -> Any:
         return value
 
 
-def checkpoint_name_from_path(path: Path) -> str:
-    if path.is_dir():
-        return path.name
-    return path.parent.name
-
-
 def checkpoint_path(name: str) -> str:
     return f"AntidoteBackup/ckpt/beavertails/{name}"
 
@@ -103,10 +89,10 @@ def unique_values(values: list[str]) -> list[str]:
     return unique
 
 
-def parse_checkpoint_metadata(name: str) -> dict[str, Any]:
+def parse_checkpoint_metadata(name: str) -> dict[str, Any] | None:
     match = CHECKPOINT_RE.search(name)
     if not match:
-        return {"checkpoint": checkpoint_path(name)}
+        return None
 
     ratio_digits = match.group("harmful_ratio")
     harmful_ratio = Decimal(int(ratio_digits)) / (Decimal(10) ** (len(ratio_digits) - 1))
@@ -122,120 +108,80 @@ def parse_checkpoint_metadata(name: str) -> dict[str, Any]:
     }
 
 
-def final_score_from_eval(path: Path) -> float | None:
-    try:
-        data = load_json(path)
-    except (OSError, json.JSONDecodeError):
-        return None
+def correct_value(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() == "true"
+    return False
+
+
+def sst2_accuracy(path: Path) -> float | None:
+    data = load_json(path)
     if not isinstance(data, list):
         return None
-
-    for item in reversed(data):
-        if isinstance(item, str):
-            match = FINAL_SCORE_RE.search(item)
-            if match:
-                return float(match.group(1))
-
-    scored_items = [item for item in data if isinstance(item, dict)]
-    if not scored_items:
+    rows = [row for row in data if isinstance(row, dict) and "correct" in row]
+    if not rows:
         return None
-    violations = 0
-    for item in scored_items:
-        categories = item.get("violoate_catogory:") or item.get("violate_category") or []
-        if categories:
-            violations += 1
-    return round(violations / len(scored_items) * 100, 2)
-
-
-def collect_summary_scores(input_dir: Path) -> dict[str, float]:
-    scores: dict[str, float] = {}
-    for summary_name in ("summary_partial.json", "summary_final.json"):
-        path = input_dir / summary_name
-        if not path.exists():
-            continue
-        data = load_json(path)
-        if not isinstance(data, dict):
-            continue
-        for checkpoint, values in data.items():
-            if not isinstance(values, dict):
-                continue
-            score = values.get(SAFETY_DATASET)
-            if is_number(score):
-                scores[checkpoint] = float(score)
-    return scores
-
-
-def collect_eval_scores(input_dir: Path) -> dict[str, dict[str, Any]]:
-    records: dict[str, dict[str, Any]] = {}
-    for eval_path in sorted(input_dir.rglob("pred_beavertails.json_sentiment_eval.json")):
-        name = checkpoint_name_from_path(eval_path)
-        if not is_antidote_mixed_checkpoint(name):
-            continue
-        score = final_score_from_eval(eval_path)
-        if score is None:
-            continue
-        pred_path = eval_path.with_name("pred_beavertails.json")
-        records[name] = {
-            "checkpoint_name": name,
-            "score": score,
-            "prediction_path": str(pred_path) if pred_path.exists() else EMPTY,
-            "evaluation_path": str(eval_path),
-        }
-    return records
+    correct = sum(1 for row in rows if correct_value(row.get("correct")))
+    return round(correct / len(rows) * 100, 2)
 
 
 def collect_records(input_dir: Path) -> list[dict[str, Any]]:
-    records = collect_eval_scores(input_dir)
-    for name, score in collect_summary_scores(input_dir).items():
-        if not is_antidote_mixed_checkpoint(name):
+    records: list[dict[str, Any]] = []
+    for path in sorted(input_dir.glob("*.json")):
+        checkpoint_name = path.stem
+        if not is_antidote_mixed_checkpoint(checkpoint_name):
             continue
-        record = records.setdefault(
-            name,
+        metadata = parse_checkpoint_metadata(checkpoint_name)
+        if metadata is None:
+            continue
+        accuracy = sst2_accuracy(path)
+        if accuracy is None:
+            continue
+        records.append(
             {
-                "checkpoint_name": name,
-                "prediction_path": EMPTY,
-                "evaluation_path": EMPTY,
-            },
+                "checkpoint_name": checkpoint_name,
+                "checkpoint": metadata["checkpoint"],
+                "accuracy": accuracy,
+                "output_path": str(path),
+                "metadata": metadata,
+            }
         )
-        record["score"] = score
-    return sorted(records.values(), key=lambda item: item["checkpoint_name"])
+    return records
 
 
 def build_run(record: dict[str, Any], index: int, template: dict[str, Any] | None) -> dict[str, Any]:
-    checkpoint_name = record["checkpoint_name"]
-    metadata = parse_checkpoint_metadata(checkpoint_name)
+    metadata = record["metadata"]
     checkpoint = metadata["checkpoint"]
 
     resolved_defaults = (template or {}).get("resolved_parameters") or {}
     datasets_defaults = (template or {}).get("datasets") or {}
-    params = {"checkpoint": checkpoint}
     resolved = copy.deepcopy(resolved_defaults)
     resolved["checkpoint"] = checkpoint
     for key in ("learning_rate", "epochs", "harmful_ratio", "harmful_ratio_percent"):
         if key in metadata:
             resolved[key] = metadata[key]
 
-    output_paths = {
-        "safety_pred_outputs": {SAFETY_DATASET: record.get("prediction_path", EMPTY)},
-        "safety_eval_jsons": {SAFETY_DATASET: record.get("evaluation_path", EMPTY)},
-        "utility_outputs": {},
-        "run_log_dir": EMPTY,
-    }
-
     return {
-        "run_id": f"remaining_{index:03d}_{checkpoint}",
+        "run_id": f"sst2_{index:03d}_{checkpoint}",
         "index": index,
         "status": "success",
         "duration_sec": EMPTY,
-        "variable_hyperparameters": params,
+        "variable_hyperparameters": {"checkpoint": checkpoint},
         "resolved_parameters": resolved,
         "datasets": {
             "attack_training_dataset": datasets_defaults.get("attack_training_dataset", EMPTY),
             "benign_training_dataset": datasets_defaults.get("benign_training_dataset", EMPTY),
-            "safety_evaluation_datasets": {SAFETY_DATASET: "BeaverTails built-in prompts"},
-            "utility_evaluation_tasks": [],
+            "safety_evaluation_datasets": {},
+            "utility_evaluation_tasks": [UTILITY_TASK],
         },
-        "output_paths": output_paths,
+        "output_paths": {
+            "safety_pred_outputs": {},
+            "safety_eval_jsons": {},
+            "utility_outputs": {UTILITY_TASK: record["output_path"]},
+            "run_log_dir": EMPTY,
+        },
         "cleanup": {
             "delete_run_checkpoint": resolved_defaults.get("delete_run_checkpoint", EMPTY),
             "checkpoint_dir": checkpoint,
@@ -248,9 +194,9 @@ def build_run(record: dict[str, Any], index: int, template: dict[str, Any] | Non
         },
         "steps": [],
         "metrics": {
-            "harmful_scores_percent_by_dataset": {SAFETY_DATASET: record["score"]},
-            "harmful_score_percent": record["score"],
-            "utility_scores_percent": {},
+            "harmful_scores_percent_by_dataset": {},
+            "harmful_score_percent": EMPTY,
+            "utility_scores_percent": {UTILITY_TASK: record["accuracy"]},
         },
         "errors": [],
     }
@@ -278,13 +224,15 @@ def merge_dict_missing(base: dict[str, Any], extra: dict[str, Any]) -> dict[str,
 def merge_run(existing: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
     merged = copy.deepcopy(existing)
     merged["metrics"] = merge_dict_missing(merged.get("metrics") or {}, incoming.get("metrics") or {})
-    incoming_harmful = ((incoming.get("metrics") or {}).get("harmful_scores_percent_by_dataset") or {}).get(SAFETY_DATASET)
-    if is_number(incoming_harmful):
-        merged.setdefault("metrics", {}).setdefault("harmful_scores_percent_by_dataset", {})[SAFETY_DATASET] = incoming_harmful
-        merged["metrics"]["harmful_score_percent"] = incoming_harmful
+    incoming_sst2 = ((incoming.get("metrics") or {}).get("utility_scores_percent") or {}).get(UTILITY_TASK)
+    if is_number(incoming_sst2):
+        merged.setdefault("metrics", {}).setdefault("utility_scores_percent", {})[UTILITY_TASK] = incoming_sst2
 
     merged["output_paths"] = merge_dict_missing(merged.get("output_paths") or {}, incoming.get("output_paths") or {})
     merged["datasets"] = merge_dict_missing(merged.get("datasets") or {}, incoming.get("datasets") or {})
+    tasks = set(merged.setdefault("datasets", {}).get("utility_evaluation_tasks") or [])
+    tasks.add(UTILITY_TASK)
+    merged["datasets"]["utility_evaluation_tasks"] = sorted(tasks)
     merged["resolved_parameters"] = merge_dict_missing(
         merged.get("resolved_parameters") or {}, incoming.get("resolved_parameters") or {}
     )
@@ -346,51 +294,43 @@ def build_aggregate(
             for name in utility_names
         },
     }
-    if SAFETY_DATASET in safety_names:
-        best = best_run_for_metric(runs, "harmful_scores_percent_by_dataset", SAFETY_DATASET, False)
+    if "beavertails" in safety_names:
+        best = best_run_for_metric(runs, "harmful_scores_percent_by_dataset", "beavertails", False)
         if best:
             aggregate["best_beavertails_run"] = {
                 "run_id": best["run_id"],
-                "harmful_score_percent_beavertails": best[f"{SAFETY_DATASET}_percent"],
+                "harmful_score_percent_beavertails": best["beavertails_percent"],
                 "variable_hyperparameters": best["variable_hyperparameters"],
             }
     return aggregate
 
 
-def build_remaining_summary(input_dir: Path, base_summary: dict[str, Any] | None) -> dict[str, Any]:
+def build_sst2_summary(input_dir: Path, base_summary: dict[str, Any] | None) -> dict[str, Any]:
     records = collect_records(input_dir)
     template = ((base_summary or {}).get("runs") or [{}])[0] if (base_summary or {}).get("runs") else None
     runs = [build_run(record, index + 1, template) for index, record in enumerate(records)]
-    source_files = [str(path) for path in sorted(input_dir.rglob("*.json"))]
+    source_files = [str(path) for path in sorted(input_dir.glob("*.json"))]
 
     base_meta = copy.deepcopy((base_summary or {}).get("meta") or {})
-    base_attack_config = copy.deepcopy((base_summary or {}).get("attack_config") or {})
     base_eval_config = copy.deepcopy((base_summary or {}).get("evaluation_config") or {})
-    base_defaults = copy.deepcopy((base_summary or {}).get("defaults") or {})
-
-    meta = {
-        **base_meta,
-        "json_schema_version": "antidote_remaining_converted_v1",
-        "merged_at": datetime.now().replace(microsecond=0).isoformat(),
-        "merged_from": source_files,
-    }
-    eval_config = {
-        **base_eval_config,
-        "safety_eval_datasets": sorted(set(base_eval_config.get("safety_eval_datasets") or []) | {SAFETY_DATASET}),
-    }
-    summary = {
-        "meta": meta,
-        "attack_config": base_attack_config,
+    eval_config = {**base_eval_config, "utility_eval_tasks": [UTILITY_TASK]}
+    return {
+        "meta": {
+            **base_meta,
+            "json_schema_version": "antidote_sst2_converted_v1",
+            "merged_at": datetime.now().replace(microsecond=0).isoformat(),
+            "merged_from": source_files,
+        },
+        "attack_config": copy.deepcopy((base_summary or {}).get("attack_config") or {}),
         "evaluation_config": eval_config,
-        "defaults": base_defaults,
+        "defaults": copy.deepcopy((base_summary or {}).get("defaults") or {}),
         "data_prep": copy.deepcopy((base_summary or {}).get("data_prep") or {}),
         "runs": runs,
         "aggregate": build_aggregate(runs, source_files, 0, 0),
     }
-    return summary
 
 
-def merge_summaries(base_summary: dict[str, Any], remaining_summary: dict[str, Any]) -> dict[str, Any]:
+def merge_summaries(base_summary: dict[str, Any], sst2_summary: dict[str, Any]) -> dict[str, Any]:
     selected: dict[tuple[str, str], dict[str, Any]] = {}
     duplicate_count = 0
     skipped_without_data = 0
@@ -403,7 +343,7 @@ def merge_summaries(base_summary: dict[str, Any], remaining_summary: dict[str, A
             continue
         selected[checkpoint_key(run)] = copy.deepcopy(run)
 
-    for run in remaining_summary.get("runs", []):
+    for run in sst2_summary.get("runs", []):
         if not is_antidote_mixed_checkpoint((run.get("variable_hyperparameters") or {}).get("checkpoint", run.get("run_id"))):
             continue
         if numeric_metric_count(run.get("metrics")) == 0:
@@ -421,18 +361,19 @@ def merge_summaries(base_summary: dict[str, Any], remaining_summary: dict[str, A
     for index, run in enumerate(runs, start=1):
         run["index"] = index
 
+    source_files = unique_values(
+        list((base_summary.get("meta") or {}).get("merged_from") or [])
+        + list((sst2_summary.get("meta") or {}).get("merged_from") or [])
+    )
     merged = copy.deepcopy(base_summary)
     merged["runs"] = runs
     meta = copy.deepcopy(base_summary.get("meta") or {})
-    source_files = unique_values(
-        list(meta.get("merged_from") or []) + list(remaining_summary.get("meta", {}).get("merged_from") or [])
-    )
     meta["merged_at"] = datetime.now().replace(microsecond=0).isoformat()
     meta["merged_from"] = source_files
     merged["meta"] = meta
 
     eval_config = copy.deepcopy(base_summary.get("evaluation_config") or {})
-    eval_config["safety_eval_datasets"] = sorted(set(eval_config.get("safety_eval_datasets") or []) | {SAFETY_DATASET})
+    eval_config["utility_eval_tasks"] = sorted(set(eval_config.get("utility_eval_tasks") or []) | {UTILITY_TASK})
     merged["evaluation_config"] = eval_config
     merged["aggregate"] = build_aggregate(runs, source_files, skipped_without_data, duplicate_count)
     return merged
@@ -443,8 +384,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--input-dir",
         type=Path,
-        default=Path("aggregated_results/antidote_remaining"),
-        help="Directory containing Antidote remaining result folders.",
+        default=Path("aggregated_results/antidote_sst2"),
+        help="Directory containing Antidote SST-2 JSON outputs.",
     )
     parser.add_argument(
         "--base-summary",
@@ -453,10 +394,10 @@ def parse_args() -> argparse.Namespace:
         help="Existing Antidote merged summary to enrich.",
     )
     parser.add_argument(
-        "--remaining-output",
+        "--sst2-output",
         type=Path,
-        default=Path("aggregated_results/results_summary_antidote_remaining.json"),
-        help="Converted remaining-only summary output path.",
+        default=Path("aggregated_results/results_summary_antidote_sst2.json"),
+        help="Converted SST-2-only summary output path.",
     )
     parser.add_argument(
         "-o",
@@ -471,21 +412,20 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     base_summary = load_json(args.base_summary) if args.base_summary.exists() else None
-    remaining_summary = build_remaining_summary(args.input_dir, base_summary)
-    write_json(args.remaining_output, remaining_summary)
+    sst2_summary = build_sst2_summary(args.input_dir, base_summary)
+    write_json(args.sst2_output, sst2_summary)
 
     if base_summary is None:
-        merged = remaining_summary
+        merged = sst2_summary
     else:
-        merged = merge_summaries(base_summary, remaining_summary)
+        merged = merge_summaries(base_summary, sst2_summary)
     write_json(args.output, merged)
 
-    print(f"Wrote {args.remaining_output}")
+    print(f"Wrote {args.sst2_output}")
     print(f"Wrote {args.output}")
     print(
-        "remaining_runs={remaining_runs}, merged_runs={merged_runs}, "
-        "duplicates={duplicates}".format(
-            remaining_runs=len(remaining_summary["runs"]),
+        "sst2_runs={sst2_runs}, merged_runs={merged_runs}, duplicates={duplicates}".format(
+            sst2_runs=len(sst2_summary["runs"]),
             merged_runs=len(merged["runs"]),
             duplicates=merged["aggregate"]["deduplicated_parameter_runs"],
         )

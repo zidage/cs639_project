@@ -24,7 +24,7 @@ Antidote & Model & meta-llama/Llama-2-7b-hf \\
  & Warmup ratio & 0.1 \\
  & Scheduler & constant \\
  & Safety eval datasets & advbench, beavertails \\
- & Utility eval tasks & sst2, gsm8k \\
+ & Utility eval tasks & gsm8k, sst2 \\
 \bottomrule
 \end{tabular}
 }
@@ -107,9 +107,9 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \toprule
 Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
-1e-5 & Antidote & -- & -- & -- \\
+1e-5 & Antidote & 0 & 0 & -- \\
 \addlinespace
-1e-4 & Antidote & -- & -- & -- \\
+1e-4 & Antidote & 0 & 0 & -- \\
 \bottomrule
 \end{tabular}
 }
@@ -126,7 +126,7 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 1e-5 & Antidote & 0 & 0 & -- \\
 \addlinespace
-1e-4 & Antidote & -- & -- & -- \\
+1e-4 & Antidote & 0 & -- & 0 \\
 \bottomrule
 \end{tabular}
 }
