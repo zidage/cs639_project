@@ -6,7 +6,7 @@ Modern large language models are commonly safety-aligned before deployment, but 
 
 This project evaluates **Antidote**, a post-fine-tuning defense mechanism designed to recover safety after harmful fine-tuning attacks without retraining the entire model.
 
-Our work extends prior evaluations by testing robustness across a broader hyperparameter grid rather than relying on a single attack configuration.
+We compare Antidote against other defense strategies, including SFT, RepNoise, and Vaccine, under a shared harmful fine-tuning pipeline. Our experiments analyze how defense effectiveness changes across harmful-data ratios, learning rates, and training epochs while jointly evaluating harmfulness reduction and downstream utility preservation.
 
 ---
 
