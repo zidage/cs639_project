@@ -177,7 +177,7 @@ The above two commands are how you run a single harmful finetuning and then run 
   --num_test_data 1000
 
 !python eval_sentiment.py \
+  --input_path ../../data/poison/<output_name>.json
 ```
 To run all the evaluation of the ckpt of both the attacks and the antidote I used run_eval.py which contains all the ckpts and then runs the evaulation on it.
-  --input_path ../../data/poison/<output_name>.json
 
