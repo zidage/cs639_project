@@ -139,7 +139,7 @@ snapshot_download(
   --benign_dataset data/sst2.json
 ```
 
-#Antidote 
+# Antidote 
 ```bash
 !python train.py \
   --model_name_or_path /content/models/Llama-2-7b-hf \
@@ -164,7 +164,7 @@ snapshot_download(
   --sample_num 2000
 ```
 
-#Evaluation
+# Evaluation
 ```bash
 !python pred.py \
   --lora_folder ../../ckpt/beavertails/<checkpoint_name> \
