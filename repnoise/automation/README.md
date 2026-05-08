@@ -5,12 +5,7 @@ This folder contains automation scripts:
 - `run_repnoise.py`: run SFT with single-GPU settings, progress logs, and JSON summary.
 - `new_repnoise_grid.py`: run SFT attack sweeps (27 default runs) with detailed logs and JSON summaries.
 
-
-## 0) Environmnent 
-
-The Experiments were done with Python 3.10.8, and the libraries in requirements.txt, after installing the requirements, update huggingface_hub to the version :0.23.0. It will show a warning that you can ignore. 
-
-## 1) Run original Antitode Safety Alignement Code 
+## 1) Run original Repnoise Safety Alignement Code 
 
 The values of alpha and beta in the original paper were kept : alpha = 0.1, beta = 0.001, and 20 epochs.
 
