@@ -27,6 +27,9 @@ Our work extends prior evaluations by testing robustness across a broader hyperp
 
 # ⚠️ Experimental Setup
 
+## Google Colab
+- H100 GPU High RAM
+
 ## Base Model
 - Llama-2-7b-hf
 - LoRA fine-tuning
@@ -143,10 +146,10 @@ snapshot_download(
 ```bash
 !python train.py \
   --model_name_or_path /content/models/Llama-2-7b-hf \
-  --lora_folder ckpt/beavertails/attack_mixed_r010_lr1e4_ep10_sn5000 \
+  --lora_folder ckpt/beavertails/attack_mixed_<poision>__<learning rate>_<epoch>_sn5000 \
   --data_path PKU-Alignment/BeaverTails_safe \
   --bf16 True \
-  --output_dir ckpt/beavertails/antidote_mixed_r010_lr1e4_ep10_dr02_sn2000 \
+  --output_dir ckpt/beavertails/antidote_mixed_<poision>_<learning rate>_<epoch>_dr02_sn2000 \
   --num_train_epochs 1 \
   --per_device_train_batch_size 5 \
   --gradient_accumulation_steps 1 \
@@ -163,6 +166,7 @@ snapshot_download(
   --dense_ratio 0.2 \
   --sample_num 2000
 ```
+The above two commands are how you run a single harmful finetuning and then run antidote on the ckpt of that harmful attack. In the repo there is program called run_experiment_grid.py which runs a grid through all the hyperparameters specified above and then run antidote on those attacks.
 
 # Evaluation
 ```bash
@@ -173,5 +177,7 @@ snapshot_download(
   --num_test_data 1000
 
 !python eval_sentiment.py \
+```
+To run all the evaluation of the ckpt of both the attacks and the antidote I used run_eval.py which contains all the ckpts and then runs the evaulation on it.
   --input_path ../../data/poison/<output_name>.json
 ```
