@@ -4,6 +4,7 @@ This directory contains scripts for collecting experiment result JSON files and 
 
 - `merge_results_summaries.py`: merges one or more `results_summary*.json` files into one deduplicated summary.
 - `convert_flat_results_summary.py`: converts flat per-benchmark result lists, such as Vaccine outputs, into merged `results_summary` format.
+- `convert_antidote_remaining.py`: converts remaining Antidote beavertails-only outputs and merges them into the Antidote summary.
 - `generate_latex_tables.py`: reads one or more merged summaries and generates LaTeX result tables.
 
 The scripts use only the Python standard library.
@@ -88,7 +89,21 @@ python aggregated_results\convert_flat_results_summary.py `
 
 The converter groups rows by method, model, rho, sample size, learning rate, epochs, and poison/harmful ratio. Metrics like `sst2_accuracy`, `gsm8k_accuracy`, and `agnews_accuracy` are merged into `metrics.utility_scores_percent` for the same run. Fields that do not exist in the flat input are left blank in the converted summary.
 
-## 3. Generate LaTeX Tables
+## 3. Convert Remaining Antidote Results
+
+Use `convert_antidote_remaining.py` when Antidote outputs are checkpoint folders with `pred_beavertails.json_sentiment_eval.json` files or `summary_final.json` / `summary_partial.json` score maps.
+
+```powershell
+python aggregated_results\convert_antidote_remaining.py `
+  --input-dir aggregated_results\antidote_remaining `
+  --base-summary aggregated_results\results_summary_merged_antidote.json `
+  --remaining-output aggregated_results\results_summary_antidote_remaining.json `
+  -o aggregated_results\results_summary_merged_antidote.json
+```
+
+The converter writes a remaining-only summary first, then merges it with the existing Antidote summary by checkpoint. Existing advbench and utility metrics are preserved; remaining beavertails scores and output paths are added.
+
+## 4. Generate LaTeX Tables
 
 Use `generate_latex_tables.py` after producing merged summaries.
 

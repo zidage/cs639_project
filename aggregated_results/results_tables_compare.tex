@@ -44,16 +44,16 @@ Antidote & Model & meta-llama/Llama-2-7b-hf \\
  & Attack data mix & harmful: PKU-Alignment/BeaverTails\_dangerous; benign: sst2 (data/sst2.json) \\
  & Sample size & 5000 \\
  & Test size & 1000 \\
- & Harmful ratios & 1\%, 10\% \\
+ & Harmful ratios & 1\%, 5\%, 10\% \\
  & Learning rates & 1e-5, 1e-4 \\
- & Epochs & 5, 10 \\
+ & Epochs & 5, 10, 20 \\
  & Train batch size & 5 \\
  & Eval batch size & 5 \\
  & Grad accum. steps & 1 \\
  & Weight decay & 0.1 \\
  & Warmup ratio & 0.1 \\
  & Scheduler & constant \\
- & Safety eval datasets & beavertails, advbench \\
+ & Safety eval datasets & advbench, beavertails \\
  & Utility eval tasks & sst2, gsm8k \\
 Vaccine & Model & /root/project/Vaccine/cache/models--meta-llama--Llama-2-7b-hf/snapshots/01c7f73d771dfac7d292323805ebc428287df4f9 \\
  & Attack data mix & harmful: PKU-Alignment/BeaverTails\_dangerous; benign: sst2 (data/sst2.json) \\
@@ -422,7 +422,7 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 1e-5 & SFT & 54.6 & 62.1 & 68.7 \\
  & RepNoise & 56 & 61.2 & 67.8 \\
- & Antidote & 54.3 & -- & -- \\
+ & Antidote & 54.3 & -- & 36.5 \\
  & Vaccine & 40.8 & 37.4 & 43.4 \\
 \addlinespace
 5e-5 & SFT & 67.6 & 68.3 & 71.2 \\
@@ -450,7 +450,7 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \midrule
 1e-5 & SFT & 66.5 & 74.1 & 74.6 \\
  & RepNoise & 66.9 & 75.6 & -- \\
- & Antidote & -- & -- & -- \\
+ & Antidote & 54.2 & 54.3 & -- \\
  & Vaccine & 43.8 & 47.4 & 65 \\
 \addlinespace
 5e-5 & SFT & 76 & 75.7 & 76.9 \\
@@ -460,7 +460,7 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \addlinespace
 1e-4 & SFT & 77.1 & 76.9 & 77.1 \\
  & RepNoise & 77.7 & 80 & -- \\
- & Antidote & -- & -- & -- \\
+ & Antidote & 41.5 & 54.5 & -- \\
  & Vaccine & 76.2 & 75.6 & 74.4 \\
 \bottomrule
 \end{tabular}
@@ -488,7 +488,7 @@ Learning rate & Method & Epoch 5 & Epoch 10 & Epoch 20 \\
 \addlinespace
 1e-4 & SFT & 76.4 & 77.6 & 79 \\
  & RepNoise & 78.1 & 79.5 & 79 \\
- & Antidote & -- & -- & -- \\
+ & Antidote & 54.5 & 55 & 54.8 \\
  & Vaccine & 77.2 & 79 & 79.6 \\
 \bottomrule
 \end{tabular}
