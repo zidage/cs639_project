@@ -1,0 +1,24 @@
+[
+  {
+    "method": "vaccine",
+    "model": "meta-llama/Llama-2-7b-hf",
+    "model_path": "/root/project/Vaccine/cache/models--meta-llama--Llama-2-7b-hf/snapshots/01c7f73d771dfac7d292323805ebc428287df4f9",
+    "dataset": "sst2",
+    "attack_data": "PKU-Alignment/BeaverTails_dangerous + data/sst2.json",
+    "rho": 2.0,
+    "learning_rate": "1e-5",
+    "epochs": 5,
+    "poison_ratio": 0.05,
+    "sample_num": 5000,
+    "alignment_checkpoint": "ckpt/Llama-2-7b-hf_vaccine_2",
+    "attack_checkpoint": "ckpt/sst2/Llama-2-7b-hf_vaccine_f_rho2_pr0.05_n5000_lr1e-5_ep5",
+    "sst2_output": "data/sst2/Llama-2-7b-hf_vaccine_f_rho2_pr0.05_n5000_lr1e-5_ep5.json",
+    "grid_index": 1,
+    "started_at": "2026-05-08T07:25:49",
+    "status": "running",
+    "sst2_accuracy": 66.4,
+    "finished_at": "2026-05-07T09:36:47",
+    "harmful_generation": "results/vaccine_sst2_hs/generations/Llama-2-7b-hf_vaccine_f_rho2_pr0.05_n5000_lr1e-5_ep5.json",
+    "harmful_eval_output": "results/vaccine_sst2_hs/generations/Llama-2-7b-hf_vaccine_f_rho2_pr0.05_n5000_lr1e-5_ep5.json_sentiment_eval.json"
+  }
+]
