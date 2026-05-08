@@ -118,15 +118,15 @@ snapshot_download(
   --lora_folder ckpt/Llama-2-7b-hf_sft_paper \
   --data_path BeaverTails_dangerous \
   --bf16 True \
-  --output_dir ckpt/beavertails/attack_mixed_{poision}_{learing rate}_{epoch}_sn5000 \
-  --num_train_epochs {epoch} \
+  --output_dir ckpt/beavertails/attack_mixed_<poision>_<learing rate>_<epoch>_sn5000 \
+  --num_train_epochs <epoch> \
   --per_device_train_batch_size 5 \
   --gradient_accumulation_steps 1 \
   --evaluation_strategy no \
   --save_strategy steps \
   --save_steps 100000 \
   --save_total_limit 1 \
-  --learning_rate {learning rate} \
+  --learning_rate <learning rate> \
   --weight_decay 0.1 \
   --warmup_ratio 0.1 \
   --lr_scheduler_type cosine \
@@ -135,7 +135,7 @@ snapshot_download(
   --cache_dir cache \
   --optimizer normal \
   --sample_num 5000 \
-  --poison_ratio {poision} \
+  --poison_ratio <poision> \
   --benign_dataset data/sst2.json
 ```
 
