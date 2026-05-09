@@ -1,38 +1,100 @@
-# CS639 NLP Project
+## What Each Folder Means
 
-This repository will be used to coordinate our course project, including idea discussion, task tracking, code development, and the final report.
+### `antidote_vaccine_baseline/`
 
-## Workflow Overview
+This is the preferred code path for the Antidote-style Vaccine baseline. It uses the Antidote codebase and Antidote LoRA configuration:
 
-Since our group has six members, we will mainly use an asynchronous workflow to make collaboration more flexible and easier to coordinate.
+- LoRA rank `r=256`
+- `lora_alpha=4`
+- `lora_dropout=0`
+- target modules: `q_proj`, `k_proj`, `v_proj`
+- SST-2 utility test size: `1000`
+- BeaverTails harmful-score test size: `1000`
+- attack scheduler: `constant`
 
-### GitHub Discussions
+This route is the clean implementation to continue running. The 27-setting run was not completed before packaging.
 
-Used for discussing project ideas, discussing high-level decisions, and collecting feedback.
+### `vaccine_legacy_results/`
 
-### GitHub Issues & Projects
+This folder preserves the completed Vaccine results produced with the original Vaccine repository implementation. These results are included because they are part of the work completed for the project, but they are not the strict Antidote-codebase baseline.
 
-Used for tracking tasks, section ownership, and overall progress.
+Important differences from the preferred Antidote-codebase baseline:
 
-### Pull Requests
+- original Vaccine LoRA configuration, not Antidote LoRA configuration
+- completed 27-setting SST-2/BeaverTails grid
+- earlier HS evaluation included 500-sample BeaverTails runs
+- useful as a legacy reproduction record and trend analysis
 
-Used for code contributions and major changes.
+## Main Interfaces
 
-Synchronous meetings may be used occasionally if needed, but they are not the default.
+### Run the correct Antidote-codebase Vaccine baseline
 
-## Project Topic Selection
+```bash
+cd antidote_vaccine_baseline
+GPU_LIST=0,1 bash script/automation/run_vaccine_sst2_27grid_antidote.sh
+```
 
-Provided project topics will open for voting after 2/9.
-Before that, feel free to propose ideas or start discussions in GitHub Discussions.
+The script runs:
 
-Voting and preference collection will be handled in a lightweight way, and the goal is to converge rather than force consensus.
+- Vaccine alignment with `rho=2`
+- 27 harmful fine-tuning settings:
+  - learning rates: `1e-5`, `5e-5`, `1e-4`
+  - epochs: `5`, `10`, `20`
+  - harmful ratios: `0.01`, `0.05`, `0.10`
+- SST-2 FA evaluation
+- BeaverTails HS evaluation
 
-## Section Ownership
+Key environment variables:
 
-Each major section (code or report) will have an owner, whose role is to organize and integrate contributions.
-Ownership does not mean working alone. Suggestions and contributions from others are always welcome.
+```bash
+MODEL_PATH=/path/to/Llama-2-7b-hf/snapshot
+CACHE_DIR=/path/to/hf/cache
+GPU_LIST=0,1
+CONDA_ENV=vaccine
+RHO=2
+SAMPLE_NUM=5000
+HS_TEST_SIZE=1000
+```
 
-## Communication
+The final summary is written to:
 
-Please feel free to share thoughts, concerns, or alternative suggestions about the workflow itself.
-The structure here is meant to help collaboration, and adjustments are always open for discussion.
+```text
+antidote_vaccine_baseline/results/vaccine_sst2_27grid_antidote/results_summary_vaccine_sst2_27grid_antidote.json
+```
+
+### Inspect completed legacy Vaccine results
+
+```text
+vaccine_legacy_results/results/vaccine_sst2/results_summary_vaccine_sst2.json
+vaccine_legacy_results/results/vaccine_sst2_hs/results_summary_vaccine_sst2_hs.json
+vaccine_legacy_results/results/vaccine_sst2_total_results.json
+```
+
+## Source Code and Modifications
+
+This package starts from two public research codebases:
+
+- `vaccine_legacy_results/`: original `git-disl/Vaccine` code path used for the completed legacy results.
+- `antidote_vaccine_baseline/`: `git-disl/Antidote` code path used for the cleaner Vaccine baseline interface.
+
+The core model/trainer logic is not reimplemented. The project additions are wrappers and runtime fixes:
+
+- standardized 27-setting grid runners
+- merged JSON summaries for FA and HS
+- local dataset-cache fallback where needed
+- clear separation between completed legacy Vaccine results and the preferred Antidote-codebase baseline
+- documentation of the LoRA/configuration difference between the two routes
+
+## Not Included
+
+The package intentionally excludes:
+
+- Hugging Face token files
+- model caches
+- checkpoints and LoRA adapter weights
+- `.git/`
+- `wandb/`
+- Python cache files
+- raw run logs
+
+The package is designed to be small enough for course submission while keeping the code paths and final lightweight result summaries.
