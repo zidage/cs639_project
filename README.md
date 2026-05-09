@@ -36,13 +36,13 @@ We evaluate these defenses across a broad hyperparameter grid including poison r
 ```text
 main/
 ├── README.md
-├── report/
-├── presentation/
+├── report (main (3).pdf)
+├── presentation (Team 8 Presentation (1).pdf)
 
 Branches:
-├── antidote
-├── repnoise
-├── vaccine
+├── antidote (Antidote_aniketh)
+├── repnoise (fabien_repnoise)
+├── vaccine (Anda_Vaccine)
 ```
 
 ---
